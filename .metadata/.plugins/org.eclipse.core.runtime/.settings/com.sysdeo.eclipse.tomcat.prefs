@@ -1,0 +1,7 @@
+tomcatDir=C:/Program Files/pleiades/tomcat/7
+eclipse.preferences.version=1
+fixTomcatHomeBug=fixed
+contextsDir=C:/Program Files/pleiades/tomcat/7/conf/Catalina/localhost
+tomcatVersion=tomcatV7
+computeSourcePath=true
+tomcatConfigFile=C:/Program Files/pleiades/tomcat/7/conf/server.xml

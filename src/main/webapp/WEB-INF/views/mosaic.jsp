@@ -18,17 +18,21 @@
 		<script src="<c:url value="/resources/js/common.js" />"></script>
 
 		<script>
+		//グローバル関数
 		var image_exist = false;
+		var basemosaic_list = [];			//ベース選択画像のモザイク化配列
+
+
 		$(function(){
-			//デフォルト設定
 			var def_width=$("#mosaic_create_window").width();
 			var def_height=$("#mosaic_create_window").height();
-			$("#height_input").val(def_height);
-			$("#width_input").val(def_width);
+
+			$("#flow1").click(function(){
+				console.log("clickcheck");
+			});
 
 
 			$(".photo_size").change(function(){
-				//スライダー側変動
 				var val = $(this).val();
 				var thisid = $(this).attr("id");
 				var persentage = Number(val);
@@ -37,61 +41,35 @@
 				var change_height = def_height * persentage /100;
 
 				if(thisid == "range_height"){
+					$("#height_size").text(change_height);
 					$("#mosaic_create_window").css("height",change_height);
-					$("#height_input").val(Math.round(change_height));
 				}else if(thisid == "range_width"){
+					$("#width_size").text(change_width);
 					$("#mosaic_create_window").css("width",change_width);
-					$("#width_input").val(Math.round(change_width));
-				}else{
-					$("#mosaic_sqare_input").val(val);
-				}
-
-			})
-			$(".photo_size_input").change(function(){
-				//入力値変動
-				var val = $(this).val();
-				var thisid = $(this).attr("id");
-
-				var range_width = Math.round( 100 * val/def_width  );
-				var range_height = Math.round( 100 * val / def_height);
-				var range_mosaic = val;
-				var this_max = $(this).attr("max");
-				if(Number(val) > Number(this_max) ){
-					val = this_max;
-					$(this).val( this_max );
-				}
-
-				if(thisid == "height_input"){
-					$("#mosaic_create_window").css("height",val);
-					$("#range_height").val(range_height);
-				}else if(thisid == "width_input"){
-					$("#mosaic_create_window").css("width",val);
-					$("#range_width").val(range_width);
-				}else{
-					$("#mosaic_sqare").val(val);
 				}
 			})
+
 		});
 
-		//モザイクイメージ作成関数		★★
+		//モザイクイメージ作成関数
 		function generate(){
-			var send_date = "aaa";			//コントローラ側に送る引数
+			var send_date;			//コントローラ側に送る引数
 			//send_date = JSON.stringify(send_data);
 
 	        $.ajax({
 				type : "POST",
-				url : "mosaic_generate",//URL
+				url : "/mosaic_generate",//URL
 				data: send_date,
 				contentType: 'application/json; charset=UTF-8',
     			mimeType: 'application/json',
-				dataType : "text",
+				dataType : "json",
 				cache : false,
 				success : function(data, status, xhr) {
 					alert("success:"+data);
 					image_exist = true;
 				},
 				error : function(XMLHttpRequest, status, errorThrown) {
-					alert("データの取得に失敗しました" + status);
+					alert("データの取得に失敗しました");
 				}
 	        });
 		}
@@ -131,7 +109,6 @@
 
 			});
 		}
-
 		/*★★hereadd*/
 
 		function create_mosaic() {
@@ -144,17 +121,15 @@
 				return false;
 			}
 			selected_id += "_img";
-			var imgurl = $("#"+selected_id).attr("src");
-			var img = new Image();
-			img.src = imgurl;
 
+			var img = document.getElementById(selected_id);
 			var canvas = document.getElementById("canvas");
 		    var imgWidth = canvas.width = img.width;
 		    var imgHeight = canvas.height = img.height;
 		    var context = canvas.getContext("2d");
 		    context.drawImage(img, 0, 0);
-			var size = new Number($("#mosaic_sqare").val());
-			console.log(imgWidth + ":" + imgHeight );
+		    var index = document.forms[0].mosaicSize.selectedIndex;
+		    var size = new Number( document.forms[0].mosaicSize.options[index].value );
 
 		    var y_count = 0;
 			var x_count = 0;
@@ -284,7 +259,7 @@
 							</td>
 							<td>
 								<label class="mosaic_baseimages" for="baseimage6">
-									<img src="resources/images/base-06.png" id="baseimage1_img6">
+									<img src="resources/images/base-06.png" id="baseimage6_img">
 								</label>
 							</td>
 							<td class="td_check">
@@ -326,18 +301,13 @@
 					<p class="mosaic_flow_title"><span class=mosaic_title_sqare></span>仕上がりサイズとモザイク密度指定</p>
 					<div>
 						縦:
-						<input type="range" name="range_height" id="range_height" min=10 max=100 class="photo_size" value="100">
-						<input type="number" min=0 max=510 id="height_input" class="photo_size_input"> px
+						<input type="range" name="range_height" id="range_height" min=0 max=100 class="photo_size" value="100">
+						<input type="number" min=0 id="height_input"> px
 					</div>
 					<div>
 						横:
-						<input type="range" name="range_width" id="range_width" min=10 max=100  class="photo_size" value="100">
-						<input type="number" min=10 max=800 id="width_input" class="photo_size_input"> px
-					</div>
-					<div>
-						モザイクサイズ:
-						<input type="range" name="mosaic_square" id="mosaic_sqare" min=5 max=100  class="photo_size" value="10">
-						<input type="number" min=5 max=100 id="mosaic_sqare_input" class="photo_size_input" value=10> px四方
+						<input type="range" name="range_width" id="range_width" min=0 max=100  class="photo_size" value="100">
+						<input type="number" min=0 id="width_input"> px
 					</div>
 				</div>
 
@@ -358,18 +328,18 @@
 				</div>
 			</div>
 		</div>
+
 		<!-- 	▼テスト検証スペース▼  -->
 		<div id="test_space" style="background-color:white">
 		<h1>HTML5のcanvasでモザイク処理</h1>
 		<form>
-		モザイクのサイズとモザイクのベース画像はページ上部で選択
-<!--  		<select name="mosaicSize" id="mosaicSize">
+		モザイクのサイズ<select name="mosaicSize" id="mosaicSize">
 		  <option value="5">5 x 5</option>
 		  <option value="10">10 x 10</option>
 		  <option value="30">30 x 30</option>
 		  <option value="50">50 x 50</option>
 		</select>
- -->		<input type="button" value="実行" onclick="create_mosaic()"/>
+		<input type="button" value="実行" onclick="create_mosaic()"/>
 		</form>
 		<canvas id="canvas">
 		canvasに対応したブラウザでなければ動作しません！

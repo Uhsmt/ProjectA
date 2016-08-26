@@ -1,4 +1,4 @@
-package com.example.ProjectA;
+package com.example.mosaic;
 
 import java.text.DateFormat;
 import java.util.Date;

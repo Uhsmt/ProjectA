@@ -65,6 +65,4 @@ public class ColorModel {
 	public void setBlue(int blue) {
 		Blue = blue;
 	}
-
-
 }

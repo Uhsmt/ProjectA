@@ -26,7 +26,6 @@
 			$("#height_input").val(def_height);
 			$("#width_input").val(def_width);
 
-
 			$(".photo_size").change(function(){
 				//スライダー側変動
 				var val = $(this).val();
@@ -75,13 +74,15 @@
 
 		//モザイクイメージ作成関数		★★
 		function generate(){
-			var send_date = "aaa";			//コントローラ側に送る引数
+
+			//コントローラ側に送る引数(素材フォルダ)
+			var materialpath = "C:\\Material";
 			//send_date = JSON.stringify(send_data);
 
 	        $.ajax({
 				type : "POST",
 				url : "mosaic_generate",//URL
-				data: send_date,
+				data: materialpath,
 				contentType: 'application/json; charset=UTF-8',
     			mimeType: 'application/json',
 				dataType : "text",
@@ -95,7 +96,6 @@
 				}
 	        });
 		}
-
 
 		//保存用関数
 		function save(){

@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<section name="org.eclipse.egit.ui.internal.pull.PullResultDialog.dialogBounds">
+		<item value="810" key="DIALOG_X_ORIGIN"/>
+		<item value="406" key="DIALOG_Y_ORIGIN"/>
+	</section>
 	<section name="GitCommitMessageComponent">
+		<list key="C:\Users\Junji Kodama\Documents\ProjectA\.git">
+			<item value="false"/>
+			<item value="JunjiKodama-PC\Junji Kodama &lt;xjx0524@yahoo.co.jp&gt;"/>
+			<item value="4725458"/>
+			<item value="JunjiKodama-PC\Junji Kodama &lt;xjx0524@yahoo.co.jp&gt;"/>
+			<item value="864c53510ca99f1c5dcadf74b082f77ac7e5cde4"/>
+		</list>
 	</section>
 	<section name="org.eclipse.egit.ui.internal.staging.StagingView">
-		<item value="200,200" key="STAGING_SASH_FORM_WEIGHT"/>
-		<item value="false" key="sortItemState"/>
-		<item value="200,200" key="HORIZONTAL_SASH_FORM_WEIGHT"/>
+		<item value="500,500" key="STAGING_SASH_FORM_WEIGHT"/>
+		<item value="true" key="sortItemState"/>
+		<item value="500,500" key="HORIZONTAL_SASH_FORM_WEIGHT"/>
 	</section>
 </section>

@@ -25,6 +25,7 @@ public class MosaicController {
 		return "mosaic";
 	}
 
+	//変更
 	// 変数
 	Object image[][];
 	String mozaicpath = null;
@@ -45,7 +46,6 @@ public class MosaicController {
 		return mozaicpath;
 	}
 
-	//材料の処理
 	public void materialdetail(String materialpath) {
 		Map<Object, Object> red = new HashMap<Object, Object>();
 		Map<Object, Object> green = new HashMap<Object, Object>();

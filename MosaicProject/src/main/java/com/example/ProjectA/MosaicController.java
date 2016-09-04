@@ -1,7 +1,11 @@
 package com.example.ProjectA;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -25,7 +29,6 @@ public class MosaicController {
 		return "mosaic";
 	}
 
-	// 変数
 	Object image[][];
 	String mozaicpath = null;
 
@@ -39,13 +42,13 @@ public class MosaicController {
 		this.materialdetail(materialpath);
 
 		// 画像のマッチング処理
-		this.matching();
+		this.matching(materialpath);
 
 		// 作成されたモザイクフォトのパス
 		return mozaicpath;
 	}
 
-	//材料の処理
+	// 材料の処理
 	public void materialdetail(String materialpath) {
 		Map<Object, Object> red = new HashMap<Object, Object>();
 		Map<Object, Object> green = new HashMap<Object, Object>();
@@ -91,12 +94,58 @@ public class MosaicController {
 			} catch (Exception e) {
 				e.printStackTrace();
 				readImage = null;
+			} finally {
+				readImage = null;
 			}
 		}
 	}
 
-	public void matching() {
+	public void matching(String materialpath) {
 
+		// TODOマッチング
+
+		BufferedImage p1 = null;
+		BufferedImage img = null;
+		BufferedImage shrink = null;
+		Graphics2D g2d = null;
+
+
+		// 画像作成＆保存
+		try {
+			p1 = ImageIO.read(new FileInputStream(image[0][0].toString()));
+
+			//引数にコマ割り数横、コマ割り数縦を指定
+			img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = img.getGraphics();
+			g.drawImage(p1, 0, 0, null);
+			g.drawImage(p1, 0, p1.getHeight(), null);
+			g.drawImage(p1, p1.getWidth(), 0, null);
+			g.drawImage(p1, p1.getWidth(), p1.getHeight(), null);
+
+			//元の大きさに戻す
+			shrink = new BufferedImage(p1.getWidth(), p1.getHeight(), p1.getType());
+			g2d = shrink.createGraphics();
+			g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION,	 RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+			g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
+			g2d.drawImage(img, 0, 0, p1.getHeight(), p1.getHeight(), null);
+
+			mozaicpath = materialpath + "\\mozaic.png";
+
+			ImageIO.write(shrink, "png", new File(mozaicpath));
+		} catch (Exception e) {
+			e.printStackTrace();
+			p1 = null;
+			img = null;
+		} finally {
+			p1 = null;
+			img = null;
+		}
 	}
-
 }

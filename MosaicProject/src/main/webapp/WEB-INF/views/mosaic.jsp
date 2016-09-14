@@ -75,6 +75,26 @@
 		//モザイクイメージ作成関数		★★
 		function generate(){
 
+			var selected_id =$("input[name='imageselect_radio']:checked").attr("id");
+			console.log(selected_id);
+			if(selected_id == null || selected_id == undefined || selected_id == ""){
+				alert("画像が選択されていません。");
+				return false;
+			}
+
+			if(selected_id == "baseimage8" ){
+				selected_id =$("input[name='image_file[]']").attr("id");
+				selected_id += "_img";
+				var imgurl = $("#"+selected_id).attr("src");
+				if(imgurl == null || selected_id == undefined || selected_id == ""){
+					alert("オリジナル画像が選択されていません。");
+				}
+			}
+
+
+			selected_id += "_img";
+			var imgurl = $("#"+selected_id).attr("src");
+
 			//コントローラ側に送る引数(素材フォルダ)
 			var materialpath = "C:\\Material";
 			//send_date = JSON.stringify(send_data);
@@ -82,7 +102,7 @@
 	        $.ajax({
 				type : "POST",
 				url : "mosaic_generate",//URL
-				data: materialpath,
+				data: imgurl,
 				contentType: 'application/json; charset=UTF-8',
     			mimeType: 'application/json',
 				dataType : "text",
@@ -233,8 +253,10 @@
 			<div id="mosaic_wrapper">
 				<div id="flow1">
 					<p class="mosaic_flow_title"><span class=mosaic_title_sqare></span>完成イメージを選択</p>
+
 					<table class="mosaic_select_temple">
 						<tr>
+
 							<td class="td_check">
 								<input type="radio" name="imageselect_radio" id="baseimage1">
 							</td>
@@ -243,6 +265,7 @@
 									<img src="resources/images/base-01.png" id="baseimage1_img">
 								</label>
 							</td>
+
 							<td class="td_check">
 								<input type="radio" name="imageselect_radio" id="baseimage2">
 							</td>
@@ -251,6 +274,7 @@
 									<img src="resources/images/base-02.png" id="baseimage2_img">
 								</label>
 							</td>
+
 							<td class="td_check">
 								<input type="radio" name="imageselect_radio" id="baseimage3">
 							</td>
@@ -258,8 +282,8 @@
 								<label class="mosaic_baseimages" for="baseimage3">
 									<img src="resources/images/base-03.png" id="baseimage3_img">
 								</label>
-
 							</td>
+
 							<td class="td_check">
 								<input type="radio" name="imageselect_radio" id="baseimage4">
 							</td>
@@ -267,10 +291,11 @@
 								<label class="mosaic_baseimages" for="baseimage4">
 									<img src="resources/images/base-04.png" id="baseimage4_img">
 								</label>
-
 							</td>
 						</tr>
+
 						<tr>
+
 							<td class="td_check">
 								<input type="radio" name="imageselect_radio" id="baseimage5">
 							</td>
@@ -279,6 +304,7 @@
 									<img src="resources/images/base-05.png" id="baseimage5_img">
 								</label>
 							</td>
+
 							<td class="td_check">
 								<input type="radio" name="imageselect_radio" id="baseimage6">
 							</td>
@@ -287,6 +313,7 @@
 									<img src="resources/images/base-06.png" id="baseimage1_img6">
 								</label>
 							</td>
+
 							<td class="td_check">
 								<input type="radio" name="imageselect_radio" id="baseimage7">
 							</td>
@@ -304,12 +331,19 @@
 									<span class="baseimage_none"><p style="padding:10px;">オリジナル画像を<br>フォルダから選択</p></span>
 								</label>
 							</td>
+
 						</tr>
+
 					</table>
+
 				</div>
+
 				<div id="flow2" class="mt20">
 					<p class="mosaic_flow_title"><span class=mosaic_title_sqare></span>素材選択</p>
 					<input type="file" name="image_file[]" multiple="multiple" accept="image/*" id="upload_images">
+<!-- 						<form method="POST" action="up" enctype="multipart/form-data"> -->
+<!-- 						<input type="file" name="file"> -->
+<!-- 						</form> -->
 					<div>
 						<div id="mosaic_drop_material" ><font color="gray">このエリアにファイルをドロップしてください。</font></div>
 					</div>
@@ -375,7 +409,14 @@
 		canvasに対応したブラウザでなければ動作しません！
 		</canvas>
 		<p onclick="baselist_show()" style="display:block;background:orange;color:white;width:150px">リスト確認</p>
-				</div>
+		</div>
 
+		<!--kodama追加 -->
+<!-- 		<form method="POST" action="up" enctype="multipart/form-data"> -->
+<!-- 			<input type="file" name="file"> -->
+<!-- 			<p> -->
+<!-- 				<input type="submit" value="アップロード" > -->
+<!-- 			</p> -->
+<!-- 		</form> -->
 	</body>
 </html>

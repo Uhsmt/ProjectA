@@ -22,14 +22,15 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class MosaicController {
 
-	Object image[][]; 				// 素材
-	Object mozaic[][]; 			// モザイク
-	int[][] red; 					// モザイク赤
-	int[][] green;					// モザイク緑
-	int[][] blue;					// モザイク青
+	Object image[][]; // 素材
+	Object mozaic[][]; // モザイク
+	int[][] red; // モザイク赤
+	int[][] green; // モザイク緑
+	int[][] blue; // モザイク青
 
-	String mozaicpath = null; 		// 戻り値画像パス
+	String mozaicpath = null; // 戻り値画像パス
 
+	//画面遷移
 	@RequestMapping(value = "/mosaic", method = RequestMethod.GET)
 	public String tomosaic(Locale locale, Model model) {
 		System.out.println("test");
@@ -52,9 +53,9 @@ public class MosaicController {
 
 	// 材料の処理
 	public void materialdetail(String materialpath) {
-//		Map<Object, Object> red = new HashMap<Object, Object>();
-//		Map<Object, Object> green = new HashMap<Object, Object>();
-//		Map<Object, Object> blue = new HashMap<Object, Object>();
+		// Map<Object, Object> red = new HashMap<Object, Object>();
+		// Map<Object, Object> green = new HashMap<Object, Object>();
+		// Map<Object, Object> blue = new HashMap<Object, Object>();
 
 		BufferedImage readImage = null;
 
@@ -62,10 +63,10 @@ public class MosaicController {
 		File files[] = file.listFiles();
 
 		// デバッグ用
-//		for (int i = 0; i < files.length; i++) {
-//			System.out.println(files[i]);
-//			System.out.println("jsから送られた引数：" + materialpath);
-//		}
+		// for (int i = 0; i < files.length; i++) {
+		// System.out.println(files[i]);
+		// System.out.println("jsから送られた引数：" + materialpath);
+		// }
 
 		this.image = new Object[files.length][4];
 		for (int i = 0; i < files.length; i++) {
@@ -87,9 +88,9 @@ public class MosaicController {
 					}
 				}
 				// 画像一枚の平均色
-//				red.put("red", r / (w * h));
-//				green.put("green", g / (w * h));
-//				blue.put("blue", b / (w * h));
+				// red.put("red", r / (w * h));
+				// green.put("green", g / (w * h));
+				// blue.put("blue", b / (w * h));
 				image[i][0] = files[i];
 				image[i][1] = r / (w * h);
 				image[i][2] = g / (w * h);
@@ -127,8 +128,7 @@ public class MosaicController {
 			// 元の大きさに戻す
 			shrink = new BufferedImage(p1.getWidth(), p1.getHeight(), p1.getType());
 			g2d = shrink.createGraphics();
-			g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION,
-					RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+			g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
 			g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
@@ -152,11 +152,11 @@ public class MosaicController {
 		}
 	}
 
-	// アップロード処理
-	@RequestMapping(value = "/up", method = RequestMethod.POST)
-	public String upload(@RequestParam("file") MultipartFile imagefile, Model model) throws Exception {
+	// アップロード処理オリジナル画像
+	@RequestMapping(value = "/uporigin", method = RequestMethod.POST)
+	public String uploadorigin(@RequestParam("file") MultipartFile imagefile, Model model) throws Exception {
 
-		String mozaicpath = "C:/temp/";   //アップ画像保存場所
+		String mozaicpath = "C:/temp/"; // アップ画像保存場所
 		BufferedImage readImage = null;
 
 		// 保存
@@ -167,11 +167,11 @@ public class MosaicController {
 		File files[] = file.listFiles();
 
 		// デバッグ用
-//		for (int i = 0; i < files.length; i++) {
-//			System.out.println(files[i]);
-//		}
+		// for (int i = 0; i < files.length; i++) {
+		// System.out.println(files[i]);
+		// }
 
-//		mozaic = new Object[files.length][4];
+		// mozaic = new Object[files.length][4];
 
 		for (int i = 0; i < files.length; i++) {
 			try {
@@ -200,6 +200,15 @@ public class MosaicController {
 				readImage = null;
 			}
 		}
+		System.out.println("ファイル");
+		return "mosaic";
+	}
+
+	// アップロード処理デフォルト
+	@RequestMapping(value = "/up", method = RequestMethod.POST)
+	@ResponseBody
+	public String upload(@RequestBody String path) {
+
 		System.out.println("ファイル");
 		return "mosaic";
 	}

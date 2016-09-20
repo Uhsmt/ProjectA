@@ -48,8 +48,8 @@
 			} else {
 				$("#mosaic_sqare_input").val(val);
 			}
-
 		})
+
 		$(".photo_size_input").change(function() {
 			//入力値変動
 			var val = $(this).val();
@@ -76,7 +76,7 @@
 		})
 	});
 
-	//モザイクイメージ作成関数		★★
+	//モザイクイメージ作成関数
 	function generate() {
 		var origin = new Boolean(false);
 		// ラジオのid取得
@@ -89,8 +89,8 @@
 			return false;
 		} else {
 			if (selected_id == "baseimage8") {
-				var input_file = document.getElementById("select_file");
-				if (input_file == null) {
+				var input_file = document.getElementById("select_file").value;
+				if (input_file == "") {
 					alert("オリジナル画像が選択されていません。");
 					return false;
 				} else {
@@ -98,8 +98,7 @@
 				}
 			}
 		}
-		if (origin) {
-			// POSTでアップロード
+		if (origin == true) {
 			$.ajax({
 				url : "uporigin",
 				type : "POST",
@@ -115,13 +114,13 @@
 			});
 		}
 		else {
-			selected_id += "_img";
-			var imgurl = $("#" + selected_id).attr("src");
+			//selected_id += "_img";
+			//var imgurl = $("#" + selected_id).attr("src");
 			$.ajax({
 				type : "POST",
 				url : "up",
-				data : imgurl,
-				contentType : 'application; charset=UTF-8',
+				data : selected_id,
+				contentType : false,
 				mimeType : 'application',
 				dataType : "text",
 				cache : false,
@@ -215,16 +214,13 @@
 		});
 	}
 
-	/*★★hereadd*/
 
 	function create_mosaic() {
 		//createされるたびにlistは初期化
 		basemosaic_list = [];
-		var selected_id = $("input[name='imageselect_radio']:checked").attr(
-				"id");
+		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
 		console.log(selected_id);
-		if (selected_id == null || selected_id == undefined
-				|| selected_id == "") {
+		if (selected_id == null || selected_id == undefined || selected_id == "") {
 			alert("画像が選択されていません。");
 			return false;
 		}
@@ -323,44 +319,52 @@
 
 				<table class="mosaic_select_temple">
 					<tr>
-						<td class="td_check"><input type="radio" name="imageselect_radio" id="baseimage1"></td>
+						<td class="td_check">
+							<input type="radio" name="imageselect_radio" id="base-01.png"></td>
 						<td><label class="mosaic_baseimages" for="baseimage1">
 								<img src="resources/images/base-01.png" id="baseimage1_img">
 						</label></td>
 
-						<td class="td_check"><input type="radio" name="imageselect_radio" id="baseimage2"></td>
+						<td class="td_check">
+							<input type="radio" name="imageselect_radio" id="base-02.png"></td>
 						<td><label class="mosaic_baseimages" for="baseimage2">
 								<img src="resources/images/base-02.png" id="baseimage2_img">
 						</label></td>
 
-						<td class="td_check"><input type="radio" name="imageselect_radio" id="baseimage3"></td>
+						<td class="td_check">
+							<input type="radio" name="imageselect_radio" id="base-03.png"></td>
 						<td><label class="mosaic_baseimages" for="baseimage3">
 								<img src="resources/images/base-03.png" id="baseimage3_img">
 						</label></td>
 
-						<td class="td_check"><input type="radio" name="imageselect_radio" id="baseimage4"></td>
+						<td class="td_check">
+							<input type="radio" name="imageselect_radio" id="base-04.png"></td>
 						<td><label class="mosaic_baseimages" for="baseimage4">
 								<img src="resources/images/base-04.png" id="baseimage4_img">
 						</label></td>
 					</tr>
 
 					<tr>
-						<td class="td_check"><input type="radio" name="imageselect_radio" id="baseimage5"></td>
+						<td class="td_check">
+							<input type="radio" name="imageselect_radio" id="base-05.png"></td>
 						<td><label for="baseimage5" class="mosaic_baseimages">
 								<img src="resources/images/base-05.png" id="baseimage5_img">
 						</label></td>
 
-						<td class="td_check"><input type="radio" name="imageselect_radio" id="baseimage6"></td>
+						<td class="td_check">
+							<input type="radio" name="imageselect_radio" id="base-06.png"></td>
 						<td><label class="mosaic_baseimages" for="baseimage6">
 								<img src="resources/images/base-06.png" id="baseimage1_img6">
 						</label></td>
 
-						<td class="td_check"><input type="radio" name="imageselect_radio" id="baseimage7"></td>
+						<td class="td_check">
+							<input type="radio" name="imageselect_radio" id="base-07.png"></td>
 						<td><label class="mosaic_baseimages" for="baseimage7">
 								<img src="resources/images/base-07.png" id="baseimage7_img">
 						</label></td>
 
-						<td class="td_check"><input type="radio" name="imageselect_radio" id="baseimage8"></td>
+						<td class="td_check">
+							<input type="radio" name="imageselect_radio" id="baseimage8"></td>
 						<td><label class="mosaic_baseimages" for="baseimage8">
 								<span class="baseimage_none">
 									<p style="padding: 10px;">

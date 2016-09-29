@@ -1,8 +1,6 @@
 package com.example.ProjectA;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Locale;
@@ -26,6 +24,7 @@ public class MosaicController {
 	int[][] red; // モザイク赤
 	int[][] green; // モザイク緑
 	int[][] blue; // モザイク青
+	BufferedImage mateimage[] = null;
 
 	File file;
 
@@ -39,7 +38,7 @@ public class MosaicController {
 	// 画面遷移
 	@RequestMapping(value = "/mosaic", method = RequestMethod.GET)
 	public String tomosaic(Locale locale, Model model) {
-		System.out.println("test");
+		//System.out.println("test");
 		return "mosaic";
 	}
 
@@ -58,19 +57,18 @@ public class MosaicController {
 			readImage = ImageIO.read(this.file);
 			int w = readImage.getWidth(); // 横
 			int h = readImage.getHeight(); // 縦
-			red = new int[w][h];
-			green = new int[w][h];
-			blue = new int[w][h];
+			this.red = new int[w][h];
+			this.green = new int[w][h];
+			this.blue = new int[w][h];
 			int c;
 			// 縦
 			for (int y = 0; y < h; y++) {
 				// 横
 				for (int x = 0; x < w; x++) {
 					c = readImage.getRGB(x, y);
-
-					red[x][y] = c >> 16 & 0xff;
-					green[x][y] = c >> 8 & 0xff;
-					blue[x][y] = c & 0xff;
+					this.red[x][y] = (c >> 16) & 0xFF;
+					this.green[x][y] = (c >> 8) & 0xFF;
+					this.blue[x][y] = c  & 0xFF;
 				}
 			}
 		} catch (Exception e) {
@@ -82,7 +80,7 @@ public class MosaicController {
 
 		this.generate();
 
-		System.out.println(mozaicpath);
+		//System.out.println(mozaicpath);
 		return "mosaic";
 	}
 
@@ -109,9 +107,9 @@ public class MosaicController {
 				for (int x = 0; x < w; x++) {
 					c = readImage.getRGB(x, y);
 
-					red[x][y] = c >> 16 & 0xff;
-					green[x][y] = c >> 8 & 0xff;
-					blue[x][y] = c & 0xff;
+					red[x][y] = (c >> 16) & 0xFF;
+					green[x][y] = (c >> 8) & 0xFF;
+					blue[x][y] = c  & 0xFF;
 				}
 			}
 		} catch (Exception e) {
@@ -123,7 +121,7 @@ public class MosaicController {
 
 		this.generate();
 
-		System.out.println("mozaicpath");
+		//System.out.println("mozaicpath");
 		return "mosaic";
 	}
 
@@ -138,35 +136,35 @@ public class MosaicController {
 
 	// 材料の解析
 	public void materialdetail() {
-		BufferedImage readImage = null;
 		File matefile = new File(materialpath);
 		File files[] = matefile.listFiles();
 
 		this.image = new Object[files.length][4];
+		this.mateimage = new BufferedImage[files.length];
+
 		for (int i = 0; i < files.length; i++) {
 			try {
 				int c = 0, r = 0, g = 0, b = 0;
-				readImage = ImageIO.read(files[i]);
-				int w = readImage.getWidth();
-				int h = readImage.getHeight();
+				this.mateimage[i] = ImageIO.read(files[i]);
+				int w = mateimage[i].getWidth();
+				int h = mateimage[i].getHeight();
+
 				for (int y = 0; y < h; y++) {
 					for (int x = 0; x < w; x++) {
-						c = readImage.getRGB(x, y);
+						c = mateimage[i].getRGB(x, y);
 						r += c >> 16 & 0xff;
 						g += c >> 8 & 0xff;
 						b += c & 0xff;
 					}
 				}
 				// 画像一枚の平均色
-				image[i][0] = files[i];
-				image[i][1] = r / (w * h);
-				image[i][2] = g / (w * h);
-				image[i][3] = b / (w * h);
+				this.image[i][0] = files[i];
+				this.image[i][1] = r / (w * h);
+				this.image[i][2] = g / (w * h);
+				this.image[i][3] = b / (w * h);
 			} catch (Exception e) {
 				e.printStackTrace();
-				readImage = null;
-			} finally {
-				readImage = null;
+				mateimage = null;
 			}
 		}
 	}
@@ -174,10 +172,7 @@ public class MosaicController {
 	// マッチング処理
 	public void matching() {
 		BufferedImage readImage = null;
-		BufferedImage tempimage = null;
 		BufferedImage img = null;
-		BufferedImage shrink = null;
-		Graphics2D g2d = null;
 
 		// 画像作成＆保存
 		try {
@@ -185,59 +180,48 @@ public class MosaicController {
 
 			int w = readImage.getWidth(); // 横
 			int h = readImage.getHeight(); // 縦
+			int max = 255;
+			int num = 0;
 
-			// 引数にコマ割り数横、コマ割り数縦を指定
-			img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
-			Graphics g = img.getGraphics();
+			img = new BufferedImage(readImage.getWidth(), readImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics grph = img.getGraphics();
 
 			// 縦
 			for (int y = 0; y < h; y++) {
 				// 横
 				for (int x = 0; x < w; x++) {
 
-					int temp = red[x][y];
-					int temp1 = green[x][y];
-					int temp2 = blue[x][y];
+					int r1 = this.red[x][y];
+					int g1 = this.green[x][y];
+					int b1 = this.blue[x][y];
 
-					//tempimage = ImageIO.read();//近似値の画像パス
-							//近似値の画像
-					g.drawImage(tempimage, y, x, null);
-
+					for (int i = 0; i < this.image.length; i++){
+						int r2 = (Integer) this.image[i][1];
+						int g2 = (Integer) this.image[i][2];
+						int b2 = (Integer) this.image[i][3];
+						int dif = ((r2-r1)^2 + (g2-g1)^2 + (b2-b1)^2)^1/2;
+						int temp = dif;
+						if (temp < 0){
+							temp = temp * -1;
+						}
+						if (temp < max){
+							max = temp;
+							num = i;
+						}
+					}
+					grph.drawImage(this.mateimage[num], x , y,1,1, null);
+					max = 255;
 				}
 			}
-			g.drawImage(readImage, 0, readImage.getHeight(), null);
-			g.drawImage(readImage, readImage.getWidth(), 0, null);
-			g.drawImage(readImage, readImage.getWidth(), readImage.getHeight(), null);
-
-			// 元の大きさに戻す
-			shrink = new BufferedImage(readImage.getWidth(), readImage.getHeight(), readImage.getType());
-			g2d = shrink.createGraphics();
-			g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-			g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-			g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-			g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
-			g2d.drawImage(img, 0, 0, readImage.getHeight(), readImage.getHeight(), null);
-
 			mozaicpath = materialpath + "\\mozaic.png";
-
-			ImageIO.write(shrink, "png", new File(mozaicpath));
+			ImageIO.write(img, "png", new File(mozaicpath));
 		} catch (Exception e) {
 			e.printStackTrace();
 			readImage = null;
 			img = null;
-			shrink = null;
-			g2d = null;
 		} finally {
 			readImage = null;
 			img = null;
-			shrink = null;
-			g2d = null;
 		}
 	}
 }

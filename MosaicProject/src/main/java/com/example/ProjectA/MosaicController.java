@@ -19,20 +19,30 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class MosaicController {
 
-	Object image[][]; // 素材
-	Object mozaic[][]; // モザイク
-	int[][] red; // モザイク赤
-	int[][] green; // モザイク緑
-	int[][] blue; // モザイク青
-	BufferedImage mateimage[] = null;
+	Object image[][]; // 素材のpath、RGB
 
-	File file;
+	int[][] red; // モザイク赤(1pixel)[縦][横]
+	int[][] green; // モザイク緑(1pixel)[縦][横]
+	int[][] blue; // モザイク青(1pixel)[縦][横]
 
-	// アップ画像保存場所 変更可
-	String originpath = "C:/temp/";
-	// 素材画像場所 変更可
-	String materialpath = "C:/Material/";
+	int[][] mozaicred;//モザイク指定コマ用[縦][横]
+	int[][] mozaicgreen;//モザイク指定コマ用[縦][横]
+	int[][] mozaicblue;//モザイク指定コマ用[縦][横]
 
+	int mozaicsizeH;//最終モザイク縦
+	int mozaicsizeW;//最終モザイク横
+
+	int minpixH;//1コマ最小ピクセル縦
+	int minpixW;//1コマ最小ピクセル横
+
+	BufferedImage mateimage[] = null; //素材画像読み込み用
+
+	File file;//画像read用
+	File tempfile;//画像read用
+
+	String temppath = "C:/temp/";// アップ画像保存場所 変更可
+	String materialpath = "C:/Material/";// 素材画像場所 変更可
+	String tempimagepath;
 	String mozaicpath = null; // 戻り値画像パス
 
 	// 画面遷移
@@ -48,13 +58,20 @@ public class MosaicController {
 
 		BufferedImage readImage = null;
 
-		this.file = new File(this.originpath + imagefile.getOriginalFilename());
+		this.file = new File(this.temppath + imagefile.getOriginalFilename());
 
 		// 保存
 		imagefile.transferTo(this.file);
 
+		//引数にモザイクサイズ指定。何ピクセル＊ピクセルで作成するかjspからもらう//
+		this.mozaicsizeW = 300;
+		this.mozaicsizeH = 300;
+		this.resize(this.mozaicsizeH,this.mozaicsizeW);
+
+		this.tempfile = new File(this.tempimagepath);
+
 		try {
-			readImage = ImageIO.read(this.file);
+			readImage = ImageIO.read(this.tempfile);
 			int w = readImage.getWidth(); // 横
 			int h = readImage.getHeight(); // 縦
 			this.red = new int[w][h];
@@ -62,13 +79,13 @@ public class MosaicController {
 			this.blue = new int[w][h];
 			int c;
 			// 縦
-			for (int y = 0; y < h; y++) {
+			for (int y = 1; y <= h; y++) {
 				// 横
-				for (int x = 0; x < w; x++) {
-					c = readImage.getRGB(x, y);
-					this.red[x][y] = (c >> 16) & 0xFF;
-					this.green[x][y] = (c >> 8) & 0xFF;
-					this.blue[x][y] = c  & 0xFF;
+				for (int x = 1; x <= w; x++) {
+					c = readImage.getRGB(y, x);
+					this.red[y][x] = (c >> 16) & 0xFF;
+					this.green[y][x] = (c >> 8) & 0xFF;
+					this.blue[y][x] = c  & 0xFF;
 				}
 			}
 		} catch (Exception e) {
@@ -77,9 +94,7 @@ public class MosaicController {
 		} finally {
 			readImage = null;
 		}
-
 		this.generate();
-
 		//System.out.println(mozaicpath);
 		return "mosaic";
 	}
@@ -93,23 +108,29 @@ public class MosaicController {
 
 		this.file = new File(this.materialpath + path);
 
+		//引数にモザイクサイズ指定。何ピクセル＊ピクセルで作成するかjspからもらう//
+		this.mozaicsizeW = 300;
+		this.mozaicsizeH = 300;
+		this.resize(this.mozaicsizeH,this.mozaicsizeW);
+
+		this.tempfile = new File(this.tempimagepath);
+
 		try {
-			readImage = ImageIO.read(this.file);
+			readImage = ImageIO.read(this.tempfile);
 			int w = readImage.getWidth(); // 横
 			int h = readImage.getHeight(); // 縦
-			red = new int[w][h];
-			green = new int[w][h];
-			blue = new int[w][h];
+			this.red = new int[w][h];
+			this.green = new int[w][h];
+			this.blue = new int[w][h];
 			int c;
 			// 縦
-			for (int y = 0; y < h; y++) {
+			for (int y = 1; y <= h; y++) {
 				// 横
-				for (int x = 0; x < w; x++) {
-					c = readImage.getRGB(x, y);
-
-					red[x][y] = (c >> 16) & 0xFF;
-					green[x][y] = (c >> 8) & 0xFF;
-					blue[x][y] = c  & 0xFF;
+				for (int x = 1; x <= w; x++) {
+					c = readImage.getRGB(y, x);
+					this.red[y][x] = (c >> 16) & 0xFF;
+					this.green[y][x] = (c >> 8) & 0xFF;
+					this.blue[y][x] = c  & 0xFF;
 				}
 			}
 		} catch (Exception e) {
@@ -118,9 +139,7 @@ public class MosaicController {
 		} finally {
 			readImage = null;
 		}
-
 		this.generate();
-
 		//System.out.println("mozaicpath");
 		return "mosaic";
 	}
@@ -129,6 +148,11 @@ public class MosaicController {
 
 		// 素材の画像データ解析
 		this.materialdetail();
+
+		//jspからの値で取得
+		this.minpixH = 3;
+		this.minpixW = 3;
+		this.divide(this.minpixH,this.minpixW);
 
 		// 画像のマッチング
 		this.matching();
@@ -149,9 +173,9 @@ public class MosaicController {
 				int w = mateimage[i].getWidth();
 				int h = mateimage[i].getHeight();
 
-				for (int y = 0; y < h; y++) {
-					for (int x = 0; x < w; x++) {
-						c = mateimage[i].getRGB(x, y);
+				for (int y = 1; y <= h; y++) {
+					for (int x = 1; x <= w; x++) {
+						c = mateimage[i].getRGB(y, x);
 						r += c >> 16 & 0xff;
 						g += c >> 8 & 0xff;
 						b += c & 0xff;
@@ -176,7 +200,7 @@ public class MosaicController {
 
 		// 画像作成＆保存
 		try {
-			readImage = ImageIO.read(this.file);
+			readImage = ImageIO.read(this.tempfile);
 
 			int w = readImage.getWidth(); // 横
 			int h = readImage.getHeight(); // 縦
@@ -187,13 +211,13 @@ public class MosaicController {
 			Graphics grph = img.getGraphics();
 
 			// 縦
-			for (int y = 0; y < h; y++) {
+			for (int y = 1; y <= h; y++) {
 				// 横
-				for (int x = 0; x < w; x++) {
+				for (int x = 1; x <= w; x++) {
 
-					int r1 = this.red[x][y];
-					int g1 = this.green[x][y];
-					int b1 = this.blue[x][y];
+					int r1 = this.mozaicred[y][x];
+					int g1 = this.mozaicgreen[y][x];
+					int b1 = this.mozaicblue[y][x];
 
 					for (int i = 0; i < this.image.length; i++){
 						int r2 = (Integer) this.image[i][1];
@@ -209,12 +233,12 @@ public class MosaicController {
 							num = i;
 						}
 					}
-					grph.drawImage(this.mateimage[num], x , y,1,1, null);
+					grph.drawImage(this.mateimage[num], x , y, minpixH, minpixW, null);
 					max = 255;
 				}
 			}
-			mozaicpath = materialpath + "\\mozaic.png";
-			ImageIO.write(img, "png", new File(mozaicpath));
+			this.mozaicpath = materialpath + "\\mozaic.png";
+			ImageIO.write(img, "png", new File(this.mozaicpath));
 		} catch (Exception e) {
 			e.printStackTrace();
 			readImage = null;
@@ -224,4 +248,61 @@ public class MosaicController {
 			img = null;
 		}
 	}
+
+	//指定されたピクセル*ピクセルサイズに変更し保存
+	public void resize(int w,int h){
+		BufferedImage readImage = null;
+		BufferedImage img = null;
+
+		// 画像作成＆保存
+		try {
+			readImage = ImageIO.read(this.file);
+
+			img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+			Graphics grph = img.getGraphics();
+
+			grph.drawImage(readImage,1,1,w,h,null);
+
+			this.tempimagepath = this.temppath + "\\temp.png";
+			ImageIO.write(img, "png", new File(this.tempimagepath));
+		} catch (Exception e) {
+			e.printStackTrace();
+			readImage = null;
+			img = null;
+		} finally {
+			readImage = null;
+			img = null;
+		}
+	}
+
+	//指定されたピクセルサイズが1コマとなるようにする
+	public void divide(int h, int w){
+		int red = 0;
+		int green = 0;
+		int blue = 0;
+		this.mozaicred = new int[this.mozaicsizeH/h][this.mozaicsizeW/w];
+		this.mozaicgreen = new int[this.mozaicsizeH/h][this.mozaicsizeW/w];
+		this.mozaicblue = new int[this.mozaicsizeH/h][this.mozaicsizeW/w];
+
+		//TODO
+		for(int y = 1; y <= this.mozaicsizeH; y++){
+			for(int x = 1; x <= this.mozaicsizeW; x++){
+				red += this.red[y][x];
+				green += this.green[y][x];
+				blue += this.blue[y][x];
+
+				if (y % h == 0 && x % w ==0){
+					this.mozaicred[y/h][x/w] = red/(h*w);
+					this.mozaicgreen[y/h][x/w] = red/(h*w);
+					this.mozaicblue[y/h][x/w] = red/(h*w);
+
+					red = 0;
+					green = 0;
+					blue = 0;
+				}
+			}
+		}
+	}
+
+
 }

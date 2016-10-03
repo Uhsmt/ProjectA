@@ -79,13 +79,13 @@ public class MosaicController {
 			this.blue = new int[w][h];
 			int c;
 			// 縦
-			for (int y = 1; y <= h; y++) {
+			for (int y = 0; y < h; y++) {
 				// 横
-				for (int x = 1; x <= w; x++) {
-					c = readImage.getRGB(y, x);
-					this.red[y][x] = (c >> 16) & 0xFF;
-					this.green[y][x] = (c >> 8) & 0xFF;
-					this.blue[y][x] = c  & 0xFF;
+				for (int x = 0; x < w; x++) {
+					c = readImage.getRGB(x , y);
+					this.red[x][y] = (c >> 16) & 0xFF;
+					this.green[x][y] = (c >> 8) & 0xFF;
+					this.blue[x][y] = c  & 0xFF;
 				}
 			}
 		} catch (Exception e) {
@@ -124,13 +124,13 @@ public class MosaicController {
 			this.blue = new int[w][h];
 			int c;
 			// 縦
-			for (int y = 1; y <= h; y++) {
+			for (int y = 0; y < h; y++) {
 				// 横
-				for (int x = 1; x <= w; x++) {
-					c = readImage.getRGB(y, x);
-					this.red[y][x] = (c >> 16) & 0xFF;
-					this.green[y][x] = (c >> 8) & 0xFF;
-					this.blue[y][x] = c  & 0xFF;
+				for (int x = 0; x < w; x++) {
+					c = readImage.getRGB(x, y);
+					this.red[x][y] = (c >> 16) & 0xFF;
+					this.green[x][y] = (c >> 8) & 0xFF;
+					this.blue[x][y] = c  & 0xFF;
 				}
 			}
 		} catch (Exception e) {
@@ -149,7 +149,7 @@ public class MosaicController {
 		// 素材の画像データ解析
 		this.materialdetail();
 
-		//jspからの値で取得
+		//jspからの値で取得//
 		this.minpixH = 3;
 		this.minpixW = 3;
 		this.divide(this.minpixH,this.minpixW);
@@ -173,9 +173,9 @@ public class MosaicController {
 				int w = mateimage[i].getWidth();
 				int h = mateimage[i].getHeight();
 
-				for (int y = 1; y <= h; y++) {
-					for (int x = 1; x <= w; x++) {
-						c = mateimage[i].getRGB(y, x);
+				for (int y = 0; y < h; y++) {
+					for (int x = 0; x < w; x++) {
+						c = mateimage[i].getRGB(x, y);
 						r += c >> 16 & 0xff;
 						g += c >> 8 & 0xff;
 						b += c & 0xff;
@@ -202,22 +202,22 @@ public class MosaicController {
 		try {
 			readImage = ImageIO.read(this.tempfile);
 
-			int w = readImage.getWidth(); // 横
-			int h = readImage.getHeight(); // 縦
+			int w = readImage.getWidth()/this.minpixW; // 横
+			int h = readImage.getHeight()/this.minpixH; // 縦
 			int max = 255;
 			int num = 0;
 
-			img = new BufferedImage(readImage.getWidth(), readImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			img = new BufferedImage(readImage.getWidth(), readImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 			Graphics grph = img.getGraphics();
 
 			// 縦
-			for (int y = 1; y <= h; y++) {
+			for (int y = 0; y < h; y++) {
 				// 横
-				for (int x = 1; x <= w; x++) {
+				for (int x = 0; x < w; x++) {
 
-					int r1 = this.mozaicred[y][x];
-					int g1 = this.mozaicgreen[y][x];
-					int b1 = this.mozaicblue[y][x];
+					int r1 = this.mozaicred[x][y];
+					int g1 = this.mozaicgreen[x][y];
+					int b1 = this.mozaicblue[x][y];
 
 					for (int i = 0; i < this.image.length; i++){
 						int r2 = (Integer) this.image[i][1];
@@ -233,7 +233,7 @@ public class MosaicController {
 							num = i;
 						}
 					}
-					grph.drawImage(this.mateimage[num], x , y, minpixH, minpixW, null);
+					grph.drawImage(this.mateimage[num], x*this.minpixW , y*this.minpixH, this.minpixW, this.minpixH, null);
 					max = 255;
 				}
 			}
@@ -280,29 +280,38 @@ public class MosaicController {
 		int red = 0;
 		int green = 0;
 		int blue = 0;
-		this.mozaicred = new int[this.mozaicsizeH/h][this.mozaicsizeW/w];
-		this.mozaicgreen = new int[this.mozaicsizeH/h][this.mozaicsizeW/w];
-		this.mozaicblue = new int[this.mozaicsizeH/h][this.mozaicsizeW/w];
+		this.mozaicred = new int[this.mozaicsizeW/w][this.mozaicsizeH/h];
+		this.mozaicgreen = new int[this.mozaicsizeW/w][this.mozaicsizeH/h];
+		this.mozaicblue = new int[this.mozaicsizeW/w][this.mozaicsizeH/h];
 
-		//TODO
-		for(int y = 1; y <= this.mozaicsizeH; y++){
-			for(int x = 1; x <= this.mozaicsizeW; x++){
-				red += this.red[y][x];
-				green += this.green[y][x];
-				blue += this.blue[y][x];
+		int ycount = 1;
+		int xcount = 1;
 
-				if (y % h == 0 && x % w ==0){
-					this.mozaicred[y/h][x/w] = red/(h*w);
-					this.mozaicgreen[y/h][x/w] = red/(h*w);
-					this.mozaicblue[y/h][x/w] = red/(h*w);
+		// x方向に終わらせる
+		for (int f = 0; f < this.mozaicsizeW; f = f + w) {
 
-					red = 0;
-					green = 0;
-					blue = 0;
+			// y方向に終わらせる
+			for (int i = 0; i < this.mozaicsizeH; i = i + h ) {
+
+				for (int y = i; y < ycount*h; y++) {
+
+					for (int x = f; x < xcount*w; x++) {
+						red += this.red[x][y];
+						green += this.green[x][y];
+						blue += this.blue[x][y];
+					}
 				}
+				this.mozaicred[xcount-1][ycount-1] = red / (h * w);
+				this.mozaicgreen[xcount-1][ycount-1] = green / (h * w);
+				this.mozaicblue[xcount-1][ycount-1] = blue / (h * w);
+				red = 0;
+				green = 0;
+				blue = 0;
+				ycount++;
 			}
+			ycount = 1;
+			xcount++;
 		}
 	}
-
 
 }

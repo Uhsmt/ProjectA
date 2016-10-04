@@ -40,10 +40,14 @@ public class MosaicController {
 	File file;//画像read用
 	File tempfile;//画像read用
 
-	String temppath = "C:/temp/";// アップ画像保存場所 変更可
-	String materialpath = "C:/Material/";// 素材画像場所 変更可
+	// アップ画像保存場所 変更可
+	String temppath = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/temp/";
+	// 素材画像場所 変更可
+	String materialpath = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/material/";
+	String mozaicfolder = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/mozaic/";
+
 	String tempimagepath;
-	String mozaicpath = null; // 戻り値画像パス
+	String mozaicpath; // 戻り値画像パス
 
 	// 画面遷移
 	@RequestMapping(value = "/mosaic", method = RequestMethod.GET)
@@ -55,6 +59,10 @@ public class MosaicController {
 	// アップロード処理オリジナル画像
 	@RequestMapping(value = "/uporigin", method = RequestMethod.POST)
 	public String uploadorigin(@RequestParam("file") MultipartFile imagefile, Model model) throws Exception {
+
+		//jspからの値で取得//
+		this.minpixH = 2;
+		this.minpixW = 2;
 
 		BufferedImage readImage = null;
 
@@ -95,14 +103,19 @@ public class MosaicController {
 			readImage = null;
 		}
 		this.generate();
-		//System.out.println(mozaicpath);
-		return "mosaic";
+
+		//return "mosaic";
+		return this.mozaicpath;
 	}
 
 	// アップロード処理デフォルト
 	@RequestMapping(value = "/up", method = RequestMethod.POST)
 	@ResponseBody
 	public String upload(@RequestBody String path) {
+
+		//jspからの値で取得//
+		this.minpixH = 3;
+		this.minpixW = 3;
 
 		BufferedImage readImage = null;
 
@@ -140,8 +153,9 @@ public class MosaicController {
 			readImage = null;
 		}
 		this.generate();
-		//System.out.println("mozaicpath");
-		return "mosaic";
+
+		//return "mosaic";
+		return this.mozaicpath;
 	}
 
 	public void generate() {
@@ -149,9 +163,6 @@ public class MosaicController {
 		// 素材の画像データ解析
 		this.materialdetail();
 
-		//jspからの値で取得//
-		this.minpixH = 3;
-		this.minpixW = 3;
 		this.divide(this.minpixH,this.minpixW);
 
 		// 画像のマッチング
@@ -237,7 +248,7 @@ public class MosaicController {
 					max = 255;
 				}
 			}
-			this.mozaicpath = materialpath + "\\mozaic.png";
+			this.mozaicpath = this.mozaicfolder + "\\mozaic.png";
 			ImageIO.write(img, "png", new File(this.mozaicpath));
 		} catch (Exception e) {
 			e.printStackTrace();

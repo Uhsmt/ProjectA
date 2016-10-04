@@ -79,12 +79,15 @@
 	//モザイクイメージ作成関数
 	function generate() {
 		var origin = new Boolean(false);
+		var mozaicpath;
 		// ラジオのid取得
-		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
+		var selected_id = $("input[name='imageselect_radio']:checked").attr(
+				"id");
 		// フォームデータを取得
 		var formdata = new FormData($('#my_form').get(0));
 
-		if (selected_id == null || selected_id == undefined || selected_id == "") {
+		if (selected_id == null || selected_id == undefined
+				|| selected_id == "") {
 			alert("ラジオボタンが選択されていません。");
 			return false;
 		} else {
@@ -108,12 +111,13 @@
 				processData : false,
 				dataType : "html"
 			}).done(function(data, textStatus, jqXHR) {
-				alert(data);
+				image_exist = true;
+				mozaicpath = data;
+				alert("モザイクフォトが完成しました。"+ data);
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				alert("失敗しました。");
 			});
-		}
-		else {
+		} else {
 			//selected_id += "_img";
 			//var imgurl = $("#" + selected_id).attr("src");
 			$.ajax({
@@ -125,14 +129,34 @@
 				dataType : "text",
 				cache : false,
 				success : function(data, status, xhr) {
-					alert("success:" + data);
 					image_exist = true;
+					mozaicpath = data;
+					alert("モザイクフォトが完成しました。"+ data);
 				},
 				error : function(XMLHttpRequest, status, errorThrown) {
-					alert("失敗しました。" + status);
+
+					alert("失敗しました。");
 				}
 			});
 		}
+
+// 		var local = window.location;
+// 		var url = local.origin;
+// 		url + getDir(local); // 現在のディレクトリ
+// 		url + getDir(local,1); // 1つ上のディレクトリ
+
+// 		function getDir(place, n) {
+// 			return place.pathname.replace(new RegExp("(?:\\\/+[^\\\/]*){0," + ((n || 0) + 1) + "}$"), "/");
+// 		}
+
+
+		//モザイク画像を表示する。
+// 			var mozaic = document.getElementById("mosaic_create_window");
+// 			mozaic.src = "C:\Material/\mozaic.png";
+// 			mozaic.onload();
+// 			$("#mosaic_create_window").scr = document.currentScript.src;
+// 			$("#mosaic_create_window").onload();
+
 
 		// 		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
 		// 		console.log(selected_id);
@@ -214,86 +238,85 @@
 		});
 	}
 
+	// 	function create_mosaic() {
+	// 		//createされるたびにlistは初期化
+	// 		basemosaic_list = [];
+	// 		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
+	// 		console.log(selected_id);
+	// 		if (selected_id == null || selected_id == undefined || selected_id == "") {
+	// 			alert("画像が選択されていません。");
+	// 			return false;
+	// 		}
+	// 		selected_id += "_img";
+	// 		var imgurl = $("#" + selected_id).attr("src");
+	// 		var img = new Image();
+	// 		img.src = imgurl;
 
-	function create_mosaic() {
-		//createされるたびにlistは初期化
-		basemosaic_list = [];
-		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
-		console.log(selected_id);
-		if (selected_id == null || selected_id == undefined || selected_id == "") {
-			alert("画像が選択されていません。");
-			return false;
-		}
-		selected_id += "_img";
-		var imgurl = $("#" + selected_id).attr("src");
-		var img = new Image();
-		img.src = imgurl;
+	// 		var canvas = document.getElementById("canvas");
+	// 		var imgWidth = canvas.width = img.width;
+	// 		var imgHeight = canvas.height = img.height;
+	// 		var context = canvas.getContext("2d");
+	// 		context.drawImage(img, 0, 0);
+	// 		var size = new Number($("#mosaic_sqare").val());
+	// 		console.log(imgWidth + ":" + imgHeight);
 
-		var canvas = document.getElementById("canvas");
-		var imgWidth = canvas.width = img.width;
-		var imgHeight = canvas.height = img.height;
-		var context = canvas.getContext("2d");
-		context.drawImage(img, 0, 0);
-		var size = new Number($("#mosaic_sqare").val());
-		console.log(imgWidth + ":" + imgHeight);
+	// 		var y_count = 0;
+	// 		var x_count = 0;
+	// 		var cell_name = "";
 
-		var y_count = 0;
-		var x_count = 0;
-		var cell_name = "";
+	// 		//縦方向ループ
+	// 		for (var y = 0; y < imgHeight; y += size) {
+	// 			y_count += 1;
+	// 			//条件式　(size <= imgHeight-y)が正だった場合はsize、そうでなければimgHeight-yを適用
+	// 			var h = (size <= imgHeight - y) ? size : imgHeight - y;
 
-		//縦方向ループ
-		for (var y = 0; y < imgHeight; y += size) {
-			y_count += 1;
-			//条件式　(size <= imgHeight-y)が正だった場合はsize、そうでなければimgHeight-yを適用
-			var h = (size <= imgHeight - y) ? size : imgHeight - y;
+	// 			//横方向ループ
+	// 			for (var x = 0; x < imgWidth; x += size) {
+	// 				var w = (size <= imgWidth - x) ? size : imgWidth - x;
+	// 				x_count += 1;
 
-			//横方向ループ
-			for (var x = 0; x < imgWidth; x += size) {
-				var w = (size <= imgWidth - x) ? size : imgWidth - x;
-				x_count += 1;
+	// 				var r = 0;
+	// 				var g = 0;
+	// 				var b = 0;
 
-				var r = 0;
-				var g = 0;
-				var b = 0;
+	// 				var data = context.getImageData(x, y, w, h).data;
+	// 				var dataLength = data.length;
 
-				var data = context.getImageData(x, y, w, h).data;
-				var dataLength = data.length;
+	// 				for (var pixelIndex = 0; pixelIndex < dataLength; pixelIndex += 4) {
+	// 					r += data[pixelIndex];
+	// 					g += data[pixelIndex + 1];
+	// 					b += data[pixelIndex + 2];
+	// 				}
 
-				for (var pixelIndex = 0; pixelIndex < dataLength; pixelIndex += 4) {
-					r += data[pixelIndex];
-					g += data[pixelIndex + 1];
-					b += data[pixelIndex + 2];
-				}
+	// 				var pixelCount = dataLength / 4;
 
-				var pixelCount = dataLength / 4;
+	// 				r = Math.floor(r / pixelCount);
+	// 				g = Math.floor(g / pixelCount);
+	// 				b = Math.floor(b / pixelCount);
 
-				r = Math.floor(r / pixelCount);
-				g = Math.floor(g / pixelCount);
-				b = Math.floor(b / pixelCount);
+	// 				cell_name = "y" + y_count + "x" + x_count;
+	// 				//listに入れるオブジェクトを作成
+	// 				var cell = {
+	// 					cell_name : cell_name,
+	// 					x_address : x_count,
+	// 					y_address : y_count,
+	// 					Red : r,
+	// 					Green : g,
+	// 					Blue : b
+	// 				}
+	// 				basemosaic_list.push(cell);
 
-				cell_name = "y" + y_count + "x" + x_count;
-				//listに入れるオブジェクトを作成
-				var cell = {
-					cell_name : cell_name,
-					x_address : x_count,
-					y_address : y_count,
-					Red : r,
-					Green : g,
-					Blue : b
-				}
-				basemosaic_list.push(cell);
+	// 				context.clearRect(x, y, w, h);
+	// 				context.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+	// 				context.fillRect(x, y, w, h);
+	// 			}
+	// 		}
+	// 		console.log("タイル数：" + x_count * y_count);
+	// 	}
 
-				context.clearRect(x, y, w, h);
-				context.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
-				context.fillRect(x, y, w, h);
-			}
-		}
-		console.log("タイル数：" + x_count * y_count);
-	}
-
-	function baselist_show() {
-		console.log(basemosaic_list);
-	}
+	// 	function baselist_show() {
+	// 		console.log(basemosaic_list);
+	// 	}
 </script>
 
 <style>
@@ -307,8 +330,7 @@
 	<div id="wrapper">
 		<div id="mosaic_header">
 			<div class="mosaic_header_tab">
-				<img class="mt8 ml10" src="resources/images/mosaic_logo.png"
-					width="30px"> <span>MosaicGenerator</span>
+				<img class="mt8 ml10" src="resources/images/mosaic_logo.png" width="30px"> <span>MosaicGenerator</span>
 			</div>
 		</div>
 		<div id="mosaic_wrapper">
@@ -366,11 +388,12 @@
 						<td class="td_check">
 							<input type="radio" name="imageselect_radio" id="baseimage8"></td>
 						<td><label class="mosaic_baseimages" for="baseimage8">
-								<span class="baseimage_none">
-									<p style="padding: 10px;">
-										オリジナル画像を<br>フォルダから選択
-									</p>
-							</span>
+<!-- 								<span class="baseimage_none"> -->
+<!-- 									<p style="padding: 10px;">オリジナル画像を<br>フォルダから選択</p> -->
+<!-- 								</span> -->
+							<form id="my_form" enctype="multipart/form-data">
+								<input type="file" name="file" id="select_file">
+							</form>
 						</label></td>
 
 					</tr>
@@ -381,8 +404,7 @@
 				<p class="mosaic_flow_title">
 					<span class=mosaic_title_sqare></span>素材選択
 				</p>
-
-				<form id="my_form" enctype="multipart/form-data">
+				<form id="muiti_form" enctype="multipart/form-data">
 <!-- 				<input type="file" name="image_file" multiple="multiple" accept="image/*" id="upload_images"> -->
 					<input type="file" name="file" id="select_file">
 					<div>
@@ -404,27 +426,22 @@
 				</p>
 
 			</div>
+
 			<div id="flow4" class="mt20">
 				<p class="mosaic_flow_title">
 					<span class=mosaic_title_sqare></span>仕上がりサイズとモザイク密度指定
 				</p>
 				<div>
-					縦: <input type="range" name="range_height" id="range_height" min=10
-						max=100 class="photo_size" value="100"> <input
-						type="number" min=0 max=510 id="height_input"
-						class="photo_size_input"> px
+					縦: <input type="range" name="range_height" id="range_height" min=10 max=100 class="photo_size" value="100">
+						<input	type="number" min=0 max=510 id="height_input" class="photo_size_input"> px
 				</div>
 				<div>
-					横: <input type="range" name="range_width" id="range_width" min=10
-						max=100 class="photo_size" value="100"> <input
-						type="number" min=10 max=800 id="width_input"
-						class="photo_size_input"> px
+					横: <input type="range" name="range_width" id="range_width" min=10 max=100 class="photo_size" value="100">
+						<input	type="number" min=10 max=800 id="width_input" class="photo_size_input"> px
 				</div>
 				<div>
-					モザイクサイズ: <input type="range" name="mosaic_square" id="mosaic_sqare"
-						min=5 max=100 class="photo_size" value="10"> <input
-						type="number" min=5 max=100 id="mosaic_sqare_input"
-						class="photo_size_input" value=10> px四方
+					モザイクサイズ: <input type="range" name="mosaic_square" id="mosaic_sqare"	min=5 max=100 class="photo_size" value="10">
+									<input	type="number" min=5 max=100 id="mosaic_sqare_input"	class="photo_size_input" value=10> px四方
 				</div>
 			</div>
 
@@ -435,10 +452,16 @@
 <!-- 						<div class="btndiv_1" onclick="generate_test()">テスト</div> -->
 					</form>
 				</div>
-				<div id="mosaic_create_window"></div>
+				<div id="mosaic_create_window">
+
+					<img src="resources/mozaic/mozaic.png" id="test">
+				</div>
+
 				<div class="mt10 fr" style="height: 80px;">
+
 					<div class="btndiv_1" onclick="save()">保存</div>
 					<div class="btndiv_1" onclick="clear_image();">やり直し</div>
+
 					<img src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="alert('FaceBookで共有する');">
 					<img src="resources/images/twitter.png" alt="twitter" style="width: 30px" onclick="alert('Twitterで共有する');">
 					<img src="resources/images/instagram.png" alt="instagram" style="width: 30px" onclick="alert('Instagramで共有する');">
@@ -449,24 +472,24 @@
 	</div>
 
 	<!-- 	▼テスト検証スペース▼  -->
-	<div id="test_space" style="background-color: white">
-		<h1>HTML5のcanvasでモザイク処理</h1>
-		<form>
-			モザイクのサイズとモザイクのベース画像はページ上部で選択
-			<!--  		<select name="mosaicSize" id="mosaicSize">
-		  <option value="5">5 x 5</option>
-		  <option value="10">10 x 10</option>
-		  <option value="30">30 x 30</option>
-		  <option value="50">50 x 50</option>
-		</select>
- 			-->
-			<input type="button" value="実行" onclick="create_mosaic()" />
-		</form>
-		<canvas id="canvas">
-		canvasに対応したブラウザでなければ動作しません！
-		</canvas>
-		<p onclick="baselist_show()"
-			style="display: block; background: orange; color: white; width: 150px">リスト確認</p>
-	</div>
+<!-- 	<div id="test_space" style="background-color: white"> -->
+<!-- 		<h1>HTML5のcanvasでモザイク処理</h1> -->
+<!-- 		<form> -->
+<!-- 			モザイクのサイズとモザイクのベース画像はページ上部で選択 -->
+<!-- 			<!--  		<select name="mosaicSize" id="mosaicSize"> -->
+<!-- 		  <option value="5">5 x 5</option> -->
+<!-- 		  <option value="10">10 x 10</option> -->
+<!-- 		  <option value="30">30 x 30</option> -->
+<!-- 		  <option value="50">50 x 50</option> -->
+<!-- 		</select> -->
+<!--  			-->
+<!-- 			<input type="button" value="実行" onclick="create_mosaic()" /> -->
+<!-- 		</form> -->
+<%-- 		<canvas id="canvas"> --%>
+<!-- 		canvasに対応したブラウザでなければ動作しません！ -->
+<%-- 		</canvas> --%>
+<!-- 		<p onclick="baselist_show()" -->
+<!-- 			style="display: block; background: orange; color: white; width: 150px">リスト確認</p> -->
+<!-- 	</div> -->
 </body>
 </html>

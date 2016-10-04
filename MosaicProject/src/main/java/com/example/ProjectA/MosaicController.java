@@ -40,12 +40,9 @@ public class MosaicController {
 	File file;//画像read用
 	File tempfile;//画像read用
 
-	// アップ画像保存場所 変更可
-	String temppath = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/temp/";
-	// 素材画像場所 変更可
-	String materialpath = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/material/";
+	String temppath = "C:/temp/";// アップ画像保存場所 変更可
+	String materialpath = "C:/Material/";// 素材画像場所 変更可
 	String mozaicfolder = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/mozaic/";
-
 	String tempimagepath;
 	String mozaicpath; // 戻り値画像パス
 

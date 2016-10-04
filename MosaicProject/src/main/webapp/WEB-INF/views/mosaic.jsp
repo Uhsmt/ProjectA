@@ -140,22 +140,12 @@
 			});
 		}
 
-// 		var local = window.location;
-// 		var url = local.origin;
-// 		url + getDir(local); // 現在のディレクトリ
-// 		url + getDir(local,1); // 1つ上のディレクトリ
-
-// 		function getDir(place, n) {
-// 			return place.pathname.replace(new RegExp("(?:\\\/+[^\\\/]*){0," + ((n || 0) + 1) + "}$"), "/");
-// 		}
+		ref();
 
 
-		//モザイク画像を表示する。
-// 			var mozaic = document.getElementById("mosaic_create_window");
-// 			mozaic.src = "C:\Material/\mozaic.png";
-// 			mozaic.onload();
-// 			$("#mosaic_create_window").scr = document.currentScript.src;
-// 			$("#mosaic_create_window").onload();
+ 			//mozaic.onload();
+ 			//$("#mosaic_create_window").scr = "resources/mozaic/mozaic.png";
+ 			//$("#mosaic_create_window").onload();
 
 
 		// 		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
@@ -317,6 +307,15 @@
 	// 	function baselist_show() {
 	// 		console.log(basemosaic_list);
 	// 	}
+
+	function ref (){
+		//モザイク画像を表示する。
+		var src = "resources/mozaic/mozaic.png"
+		$("#mosaic_create_window").attr("src", src + '?' + new Date().getTime());
+
+		//var mozaic = document.getElementById("mosaic_create_window");
+		//mozaic.src = "resources/mozaic/mozaic.png";
+	}
 </script>
 
 <style>
@@ -452,11 +451,11 @@
 <!-- 						<div class="btndiv_1" onclick="generate_test()">テスト</div> -->
 					</form>
 				</div>
-				<div id="mosaic_create_window">
-
-					<img src="resources/mozaic/mozaic.png" id="test">
-				</div>
-
+<!-- 				<div id="mosaic_create_window"> -->
+					<div>
+					<img id="mosaic_create_window">
+<!-- 				</div> -->
+					</div>
 				<div class="mt10 fr" style="height: 80px;">
 
 					<div class="btndiv_1" onclick="save()">保存</div>

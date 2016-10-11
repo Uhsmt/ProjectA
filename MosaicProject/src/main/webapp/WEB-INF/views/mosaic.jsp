@@ -9,47 +9,72 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link href="<c:url value="/resources/css/common.css" />"
-	rel="stylesheet">
-<link href="<c:url value="/resources/css/jquery-ui.css" />"
-	rel="stylesheet">
+<link href="<c:url value="/resources/css/common.css" />" rel="stylesheet">
+<link href="<c:url value="/resources/css/jquery-ui.css" />" rel="stylesheet">
 
-<script
-	src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>"></script>
-<script
-	src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
-
+<script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>"></script>
+<script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
 
 <script>
+
 	var image_exist = false;
+	var def_width;
+	var def_height;
+	var minpix;
+
 	$(function() {
 		//デフォルト設定
-		var def_width = $("#mosaic_create_window").width();
-		var def_height = $("#mosaic_create_window").height();
-		$("#height_input").val(def_height);
-		$("#width_input").val(def_width);
+		def_width = $("#mosaic_create_window").width();//IDがmosaic_create_window横
+		def_height = $("#mosaic_create_window").height();//IDがmosaic_create_windowの縦
+		minpix = $("#mosaic_sqare").val();
+		$("#height_input").val(def_height);//IDがheight_inputに値をセット
+		$("#width_input").val(def_width);//IDがwidth_inputに値をセット
 
+		//classのphoto_sizeが操作されたら
 		$(".photo_size").change(function() {
-			//スライダー側変動
-			var val = $(this).val();
-			var thisid = $(this).attr("id");
-			var persentage = Number(val);
+			//スライダー変動
+			var val = $(this).val();//値を取得
+			var thisid = $(this).attr("id");//idを取得
+			var persentage = Number(val);//%に置き換える
 
 			var change_width = def_width * persentage / 100;
 			var change_height = def_height * persentage / 100;
 
+			//枠を変更する
 			if (thisid == "range_height") {
 				$("#mosaic_create_window").css("height", change_height);
 				$("#height_input").val(Math.round(change_height));
+				def_height = $(this).val();
 			} else if (thisid == "range_width") {
 				$("#mosaic_create_window").css("width", change_width);
 				$("#width_input").val(Math.round(change_width));
+				def_width = $(this).val();
 			} else {
 				$("#mosaic_sqare_input").val(val);
+				minpix = $(this).val();
 			}
+
+			//値が変わるたびにサーバへ送信
+			var data  = def_height + "/" + def_width +"/"+ minpix;
+			$.ajax({
+				type : "POST",
+				url : "data",
+				data : data,
+				contentType : false,
+				mimeType : 'application',
+				dataType : "text",
+				cache : false,
+				success : function(data, status, xhr) {
+				},
+				error : function(XMLHttpRequest, status, errorThrown) {
+					alert("失敗しました。");
+				}
+			});
+
 		})
 
+		//classのphoto_size_inputが操作されたら
 		$(".photo_size_input").change(function() {
 			//入力値変動
 			var val = $(this).val();
@@ -67,27 +92,47 @@
 			if (thisid == "height_input") {
 				$("#mosaic_create_window").css("height", val);
 				$("#range_height").val(range_height);
+				def_height = $(this).val();
 			} else if (thisid == "width_input") {
 				$("#mosaic_create_window").css("width", val);
 				$("#range_width").val(range_width);
+				def_width = $(this).val();
 			} else {
 				$("#mosaic_sqare").val(val);
+				minpix = $(this).val();
 			}
+
+			//値が変わるたびにサーバへ送信
+			var data  = def_height + "/" + def_width +"/"+ minpix;
+			$.ajax({
+				type : "POST",
+				url : "data",
+				data : data,
+				contentType : false,
+				mimeType : 'application',
+				dataType : "text",
+				cache : false,
+				success : function(data, status, xhr) {
+				},
+				error : function(XMLHttpRequest, status, errorThrown) {
+					alert("失敗しました。");
+				}
+			});
 		})
 	});
 
+
 	//モザイクイメージ作成関数
 	function generate() {
+
 		var origin = new Boolean(false);
 		var mozaicpath;
 		// ラジオのid取得
-		var selected_id = $("input[name='imageselect_radio']:checked").attr(
-				"id");
+		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
 		// フォームデータを取得
 		var formdata = new FormData($('#my_form').get(0));
 
-		if (selected_id == null || selected_id == undefined
-				|| selected_id == "") {
+		if (selected_id == null || selected_id == undefined || selected_id == "") {
 			alert("ラジオボタンが選択されていません。");
 			return false;
 		} else {
@@ -101,6 +146,8 @@
 				}
 			}
 		}
+		//var data  = selected_id+"/"+ def_height + "/" + def_width +"/"+ minpix;
+		//オリジナル画像の場合
 		if (origin == true) {
 			$.ajax({
 				url : "uporigin",
@@ -109,17 +156,16 @@
 				cache : false,
 				contentType : false,
 				processData : false,
-				dataType : "html"
-			}).done(function(data, textStatus, jqXHR) {
+				dataType : "html",
+			}).done(function(data, status, jqXHR) {
 				image_exist = true;
 				mozaicpath = data;
-				alert("モザイクフォトが完成しました。"+ data);
-			}).fail(function(jqXHR, textStatus, errorThrown) {
+				alert("モザイクフォトが完成しました。" + data);
+			}).fail(function(XMLHttpRequest, status, errorThrown) {
 				alert("失敗しました。");
 			});
+		//デフォルト画像の場合
 		} else {
-			//selected_id += "_img";
-			//var imgurl = $("#" + selected_id).attr("src");
 			$.ajax({
 				type : "POST",
 				url : "up",
@@ -131,66 +177,59 @@
 				success : function(data, status, xhr) {
 					image_exist = true;
 					mozaicpath = data;
-					alert("モザイクフォトが完成しました。"+ data);
+					alert("モザイクフォトが完成しました。" + data);
 				},
 				error : function(XMLHttpRequest, status, errorThrown) {
-
 					alert("失敗しました。");
 				}
 			});
 		}
 
-		ref();
+		/*
+		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
+		console.log(selected_id);
+		if (selected_id == null || selected_id == undefined	|| selected_id == "") {
+			alert("画像が選択されていません。");
+			return false;
+		} else {
+			if (selected_id == "baseimage8") {
+				var formdata = new FormData($('#my_form').get(0));
+			}
+		}
 
+		if (selected_id == "baseimage8") {
+			selected_id = $("input[name='image_file[]']").attr("id");
+			selected_id += "_img";
+			var imgurl = $("#" + selected_id).attr("src");
+			if (imgurl == null || selected_id == undefined || selected_id == "") {
+				alert("オリジナル画像が選択されていません。");
+			}
+		}
 
- 			//mozaic.onload();
- 			//$("#mosaic_create_window").scr = "resources/mozaic/mozaic.png";
- 			//$("#mosaic_create_window").onload();
+		selected_id += "_img";
+		var imgurl = $("#" + selected_id).attr("src");
 
+		//コントローラ側に送る引数(素材フォルダ)
+		var materialpath = "C:\\Material";
+		//send_date = JSON.stringify(send_data);
 
-		// 		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
-		// 		console.log(selected_id);
-		// 		if (selected_id == null || selected_id == undefined || selected_id == "") {
-		// 			alert("画像が選択されていません。");
-		// 			return false;
-		// 		} else {
-		// 			if (selected_id == "baseimage8") {
-		// 				var formdata = new FormData($('#my_form').get(0));
-		// 			}
-		// 		}
-
-		// 		if (selected_id == "baseimage8") {
-		// 			selected_id = $("input[name='image_file[]']").attr("id");
-		// 			selected_id += "_img";
-		// 			var imgurl = $("#" + selected_id).attr("src");
-		// 			if (imgurl == null || selected_id == undefined || selected_id == "") {
-		// 				alert("オリジナル画像が選択されていません。");
-		// 			}
-		// 		}
-
-		// 		selected_id += "_img";
-		// 		var imgurl = $("#" + selected_id).attr("src");
-
-		// 		//コントローラ側に送る引数(素材フォルダ)
-		// 		var materialpath = "C:\\Material";
-		// 		//send_date = JSON.stringify(send_data);
-
-		// 		$.ajax({
-		// 			type : "POST",
-		// 			url : "mosaic_generate",//URL
-		// 			data : imgurl,
-		// 			contentType : 'application/json; charset=UTF-8',
-		// 			mimeType : 'application/json',
-		// 			dataType : "text",
-		// 			cache : false,
-		// 			success : function(data, status, xhr) {
-		// 				alert("success:" + data);
-		// 				image_exist = true;
-		// 			},
-		// 			error : function(XMLHttpRequest, status, errorThrown) {
-		// 				alert("データの取得に失敗しました" + status);
-		// 			}
-		// 		});
+		$.ajax({
+			type : "POST",
+			url : "mosaic_generate",//URL
+			data : imgurl,
+			contentType : 'application/json; charset=UTF-8',
+			mimeType : 'application/json',
+			dataType : "text",
+			cache : false,
+			success : function(data, status, xhr) {
+				alert("success:" + data);
+				image_exist = true;
+			},
+			error : function(XMLHttpRequest, status, errorThrown) {
+				alert("データの取得に失敗しました" + status);
+			}
+		});
+		*/
 	}
 
 	//保存用関数
@@ -228,94 +267,91 @@
 		});
 	}
 
-	// 	function create_mosaic() {
-	// 		//createされるたびにlistは初期化
-	// 		basemosaic_list = [];
-	// 		var selected_id = $("input[name='imageselect_radio']:checked").attr("id");
-	// 		console.log(selected_id);
-	// 		if (selected_id == null || selected_id == undefined || selected_id == "") {
-	// 			alert("画像が選択されていません。");
-	// 			return false;
-	// 		}
-	// 		selected_id += "_img";
-	// 		var imgurl = $("#" + selected_id).attr("src");
-	// 		var img = new Image();
-	// 		img.src = imgurl;
+	/*
+	function create_mosaic() {
+		//createされるたびにlistは初期化
+		basemosaic_list = [];
+		var selected_id = $("input[name='imageselect_radio']:checked").attr(
+				"id");
+		console.log(selected_id);
+		if (selected_id == null || selected_id == undefined
+				|| selected_id == "") {
+			alert("画像が選択されていません。");
+			return false;
+		}
+		selected_id += "_img";
+		var imgurl = $("#" + selected_id).attr("src");
+		var img = new Image();
+		img.src = imgurl;
 
-	// 		var canvas = document.getElementById("canvas");
-	// 		var imgWidth = canvas.width = img.width;
-	// 		var imgHeight = canvas.height = img.height;
-	// 		var context = canvas.getContext("2d");
-	// 		context.drawImage(img, 0, 0);
-	// 		var size = new Number($("#mosaic_sqare").val());
-	// 		console.log(imgWidth + ":" + imgHeight);
+		var canvas = document.getElementById("canvas");
+		var imgWidth = canvas.width = img.width;
+		var imgHeight = canvas.height = img.height;
+		var context = canvas.getContext("2d");
+		context.drawImage(img, 0, 0);
+		var size = new Number($("#mosaic_sqare").val());
+		console.log(imgWidth + ":" + imgHeight);
 
-	// 		var y_count = 0;
-	// 		var x_count = 0;
-	// 		var cell_name = "";
+		var y_count = 0;
+		var x_count = 0;
+		var cell_name = "";
 
-	// 		//縦方向ループ
-	// 		for (var y = 0; y < imgHeight; y += size) {
-	// 			y_count += 1;
-	// 			//条件式　(size <= imgHeight-y)が正だった場合はsize、そうでなければimgHeight-yを適用
-	// 			var h = (size <= imgHeight - y) ? size : imgHeight - y;
+		//縦方向ループ
+		for (var y = 0; y < imgHeight; y += size) {
+			y_count += 1;
+			//条件式　(size <= imgHeight-y)が正だった場合はsize、そうでなければimgHeight-yを適用
+			var h = (size <= imgHeight - y) ? size : imgHeight - y;
 
-	// 			//横方向ループ
-	// 			for (var x = 0; x < imgWidth; x += size) {
-	// 				var w = (size <= imgWidth - x) ? size : imgWidth - x;
-	// 				x_count += 1;
+			//横方向ループ
+			for (var x = 0; x < imgWidth; x += size) {
+				var w = (size <= imgWidth - x) ? size : imgWidth - x;
+				x_count += 1;
 
-	// 				var r = 0;
-	// 				var g = 0;
-	// 				var b = 0;
+				var r = 0;
+				var g = 0;
+				var b = 0;
 
-	// 				var data = context.getImageData(x, y, w, h).data;
-	// 				var dataLength = data.length;
+				var data = context.getImageData(x, y, w, h).data;
+				var dataLength = data.length;
 
-	// 				for (var pixelIndex = 0; pixelIndex < dataLength; pixelIndex += 4) {
-	// 					r += data[pixelIndex];
-	// 					g += data[pixelIndex + 1];
-	// 					b += data[pixelIndex + 2];
-	// 				}
+				for (var pixelIndex = 0; pixelIndex < dataLength; pixelIndex += 4) {
+					r += data[pixelIndex];
+					g += data[pixelIndex + 1];
+					b += data[pixelIndex + 2];
+				}
 
-	// 				var pixelCount = dataLength / 4;
+				var pixelCount = dataLength / 4;
 
-	// 				r = Math.floor(r / pixelCount);
-	// 				g = Math.floor(g / pixelCount);
-	// 				b = Math.floor(b / pixelCount);
+				r = Math.floor(r / pixelCount);
+				g = Math.floor(g / pixelCount);
+				b = Math.floor(b / pixelCount);
 
-	// 				cell_name = "y" + y_count + "x" + x_count;
-	// 				//listに入れるオブジェクトを作成
-	// 				var cell = {
-	// 					cell_name : cell_name,
-	// 					x_address : x_count,
-	// 					y_address : y_count,
-	// 					Red : r,
-	// 					Green : g,
-	// 					Blue : b
-	// 				}
-	// 				basemosaic_list.push(cell);
+				cell_name = "y" + y_count + "x" + x_count;
+				//listに入れるオブジェクトを作成
+				var cell = {
+					cell_name : cell_name,
+					x_address : x_count,
+					y_address : y_count,
+					Red : r,
+					Green : g,
+					Blue : b
+				}
+				basemosaic_list.push(cell);
 
-	// 				context.clearRect(x, y, w, h);
-	// 				context.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
-	// 				context.fillRect(x, y, w, h);
-	// 			}
-	// 		}
-	// 		console.log("タイル数：" + x_count * y_count);
-	// 	}
-
-	// 	function baselist_show() {
-	// 		console.log(basemosaic_list);
-	// 	}
-
-	function ref (){
-		//モザイク画像を表示する。
-		var src = "resources/mozaic/mozaic.png"
-		$("#mosaic_create_window").attr("src", src + '?' + new Date().getTime());
-
-		//var mozaic = document.getElementById("mosaic_create_window");
-		//mozaic.src = "resources/mozaic/mozaic.png";
+				context.clearRect(x, y, w, h);
+				context.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+				context.fillRect(x, y, w, h);
+			}
+		}
+		console.log("タイル数：" + x_count * y_count);
 	}
+	 */
+
+	/*
+	function baselist_show() {
+		console.log(basemosaic_list);
+	}
+	 */
 </script>
 
 <style>
@@ -451,6 +487,7 @@
 <!-- 						<div class="btndiv_1" onclick="generate_test()">テスト</div> -->
 					</form>
 				</div>
+<!-- 				TODO ここにモザイク画像を表示------------------------------------------ -->
 <!-- 				<div id="mosaic_create_window"> -->
 					<div>
 					<img id="mosaic_create_window">

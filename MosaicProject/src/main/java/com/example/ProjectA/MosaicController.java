@@ -36,8 +36,8 @@ public class MosaicController {
 	int minpixW;// 1コマ最小ピクセル横
 	File file;// 画像read用
 	File tempfile;// 画像read用
-	String temppath = "C:/temp/";// アップ画像保存場所 変更可
-	String materialpath = "C:/Material/";// 素材画像場所 変更可
+	String temppath = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/images/temp/";// アップ画像保存場所 変更可
+	String materialpath = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/images/material/";// 素材画像場所 変更可
 	String mozaicfolder = "C:/Users/Junji Kodama/Documents/ProjectA/MosaicProject/src/main/webapp/resources/mozaic/";
 	String tempimagepath;
 	String mozaicpath; // 戻り値画像パス
@@ -168,7 +168,6 @@ public class MosaicController {
 		}
 		this.generate();
 
-		// return "mosaic";
 		return this.mozaicpath;
 	}
 
@@ -177,6 +176,7 @@ public class MosaicController {
 		// 素材の画像データ解析
 		this.materialdetail();
 
+		// 指定されたぷくセルサイズが1コマとなるようにする
 		this.divide(this.minpixH, this.minpixW);
 
 		// 画像のマッチング
@@ -217,6 +217,7 @@ public class MosaicController {
 			}
 		}
 	}
+
 
 	// マッチング処理
 	public void matching() {
@@ -275,6 +276,7 @@ public class MosaicController {
 		}
 	}
 
+
 	// 指定されたピクセル*ピクセルサイズに変更し保存
 	public void resize(int w, int h) {
 		BufferedImage readImage = null;
@@ -289,7 +291,7 @@ public class MosaicController {
 
 			grph.drawImage(readImage, 1, 1, w, h, null);
 
-			this.tempimagepath = this.temppath + "\\temp.png";
+			this.tempimagepath = this.temppath + "temp.png";
 			ImageIO.write(img, "png", new File(this.tempimagepath));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -300,6 +302,7 @@ public class MosaicController {
 			img = null;
 		}
 	}
+
 
 	// 指定されたピクセルサイズが1コマとなるようにする
 	public void divide(int h, int w) {

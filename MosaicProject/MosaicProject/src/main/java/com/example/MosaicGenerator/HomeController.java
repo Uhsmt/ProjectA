@@ -98,6 +98,9 @@ public class HomeController {
 		String selectid = null;
 		String isOrigin = "false";
 
+		int diff_fix = 0;
+		boolean isCuttype = false;
+
 		try{
 			selectid = data[0];
 			height = Integer.parseInt(data[1]);
@@ -105,7 +108,10 @@ public class HomeController {
 			h_pix = Integer.parseInt(data[3]);
 			w_pix = Integer.parseInt(data[4]);
 			isOrigin = data[5];
-
+			diff_fix = Integer.parseInt(data[6]);
+			if(data[7] == "cut"){
+				isCuttype = true;
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -127,7 +133,8 @@ public class HomeController {
 		System.out.println("heightpix:" + h_pix);
 		System.out.println("widthpix:" + w_pix);
 		System.out.println("selectid:" + selectid);
-
+		System.out.println("diff_fix:" + diff_fix);
+		System.out.println("cut:" + isCuttype);
 
 		String return_path = "";
 		String resized_path = resize(width, height , file);
@@ -197,7 +204,7 @@ public class HomeController {
 		// 1マスごとのカラー解析
 		mosaic = divide(mosaic, w_pix, h_pix , width ,height);
 		// 画像のマッチング
-		return_path = matching2(tempfile,w_pix,h_pix,mosaic,materiars);
+		return_path = matching2(tempfile,w_pix,h_pix,mosaic,materiars,diff_fix);
 
 		file1(res) ;
 		return return_path;
@@ -391,7 +398,7 @@ public class HomeController {
 	}
 
 	// マッチング処理2 HSV判定
-	public String  matching2(File file, int width ,int height ,MosaicModel mosaic ,Object[][] materiars) {
+	public String  matching2(File file, int width ,int height ,MosaicModel mosaic ,Object[][] materiars, int diff_fix) {
 		System.out.println("★matching2★");
 		BufferedImage readImage = null;
 		BufferedImage img = null;
@@ -466,7 +473,7 @@ public class HomeController {
 							//System.out.println("\t\t○○min==0");
 						}
 
-						else if( diff<Properties.hsv_rate_fix){
+						else if(diff_fix!= 0 && diff<diff_fix){
 							min = diff;
 							num = i2;
 							last_roop = i2;

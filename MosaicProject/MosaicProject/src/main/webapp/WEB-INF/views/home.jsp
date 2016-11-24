@@ -22,6 +22,7 @@
 	var image_exist = false;
 	var def_width;
 	var def_height;
+
 	var minpix;	//widthとheightの約数比でないとだめ
 	var origin_path;
 	var max_width = 800;
@@ -31,7 +32,6 @@
 		//デフォルト設定
 		def_width = $("#baseimage1_img").width();
 		def_height = $("#baseimage1_img").height();
-		minpix = $("#mosaic_sqare").val();
 
 		$("input[name='imageselect_radio']").change(function(){
 			size_set();
@@ -39,11 +39,6 @@
 			$("#rate").val(this_rate).trigger("change");
 		});
 
-		$("#mosaic_sqare_input").change(function(){
-			var thisval = $(this).val();
-			var pix = pixcel_check(thisval);
-			$("#mosaic_sqare_input").val(pix);
-		});
 
 		$("#rate").change(function(){
 			var thisval = $(this).val();
@@ -62,6 +57,7 @@
 			$("#width_input").val(width);
 			$("#mosaic_create_window").css("width",width);
 			$("#mosaic_create_window").css("height",height);
+			mosaic_rate_set();
 
 		}).dblclick(function(){
 			$(this).val(1);
@@ -72,15 +68,7 @@
 
 		});
 
- 		//classのphoto_sizeが操作されたら
-		$(".photo_size").change(function() {
-			//スライダー変動
-			var val = $(this).val();//値を取得
-			$("#mosaic_sqare_input").val(val).trigger("change");
-			minpix = $(this).val();
-		});
-
-		//classのphoto_size_inputが操作されたら
+		//画像サイズclassのphoto_size_inputが操作されたら
 		$(".photo_size_input").change(function() {
 			//入力値変動
 			var val = $(this).val();
@@ -102,10 +90,44 @@
 				$("#mosaic_create_window").css("width", val);
 				$("#range_width").val(range_width);
 			} else {
-				$("#mosaic_sqare").val(val);
-				minpix = $(this).val();
 			}
-		})
+		});
+
+		//スケールで動かされた場合は縦横比連動
+		$("#mosaic_sqare").change(function(){
+			var num = pix_list.length -1- $(this).val();
+			if(pix_list.length>=1){
+				var rate = pix_list[num];
+				var img_width = $("#width_input").val();
+				var img_height = $("#height_input").val();
+
+				$("#height_pixcel_input").val(img_height/rate);
+				$("#width_pixcel_input").val(img_width/rate);
+			}
+		});
+
+		//直接入力時は割り切れるかの未判定
+		$("#height_pixcel_input").focusout(function(){
+			//console.log("#height_pixcel_input_change");
+			var img_height = $("#height_input").val();
+			var val = $(this).val();
+			var newval = 0;
+			if(img_height%val != 0){
+				alert("仕上がりサイズ：縦を割り切れる数を入力してください。");
+				mosaic_rate_set();
+			}
+		});
+		$("#width_pixcel_input").focusout(function(){
+			//console.log("#width_pixcel_input_change");
+			var img_width = $("#width_input").val();
+			var val = $(this).val();
+			var newval = val;
+			if(img_width%val != 0){
+				alert("仕上がりサイズ：横を割り切れる数を入力してください。");
+				mosaic_rate_set();
+			}
+		});
+
 	});
 
 	function origin_image_send(frm){
@@ -179,14 +201,18 @@
 
 		var height = $("#height_input").val();
 		var width = $("#width_input").val();
-		//var pixcel = $("#mosaic_sqare_input").val();
 		var height_pixcel = $("#height_pixcel_input").val();
 		var width_pixcel = $("#width_pixcel_input").val();
 
+		var diff_fix = $("#diff_fix").val();
+		if(diff_fix ==""){
+			diff_fix = 0;
+		}
+		diff_fix = 100 -diff_fix;
+		var mosaic_treat =$("input[name='mozaic_treat']:checked").val();
+		var data  = selected_id+"/"+ height + "/" +width +"/"+ height_pixcel + "/" + width_pixcel + "/" + isOrigin + "/" + diff_fix + "/" + mosaic_treat;
 
-		var data  = selected_id+"/"+ height + "/" +width +"/"+ height_pixcel + "/" + width_pixcel + "/" + isOrigin;
-
-		alert(data);
+//		alert(data);
 
 		$.ajax({
 			type : "POST",
@@ -203,7 +229,11 @@
 				var timestamp = new Date().getTime();
 				$("#mosaic_create_window").html("<img src='file1?"+timestamp+"''>");
 				$("#save_btn").html('<a href="file1" download="mosaic.png"><span class="btndiv_1" id="save_btn">保存</span></a>')
+				var top = ($("#flow6").position().top);
+				//$("body").scrollTop(top);
 
+
+				$('html,body').animate({scrollTop: top}, 300, 'swing');
 
 			},
 			error : function(XMLHttpRequest, status, errorThrown) {
@@ -226,7 +256,7 @@
 	}
 
 	function size_set(){
-		console.log("size_set");
+		//console.log("size_set");
 
 		$(function(){
 			var thisid = $("input[name='imageselect_radio']:checked").attr("id");
@@ -238,32 +268,40 @@
 
 			$("#height_input").val(imgheight);
 			$("#width_input").val(imgwidth);
-
-//			pix_list = getMinPix(imgheight,imgwidth);
-			var pix = $("#mosaic_sqare_input").val();
-			pix = pixcel_check(pix);
-			$("#mosaic_sqare_input").val(pix);
-/* 			var pix = $("#mosaic_sqare_input").val();
-			var pix_ok = false;
-			var pix_new ;
-			console.log(pix_list);
-			for(var i=0 ; i< pix_list.length ; i++){
-				if(pix % pix_list[i] == 0){
-					pix_ok = true;
-					break;
-				}else{
-					if(pix < pix_list[i]){
-						pix_new = pix_list[i];
-					}
-				}
-			}
-			if(!pix_ok){
-				pix = pix_new;
-			}
- *///			console.log(pix);
-			//$("#mosaic_sqare_input").val(pix);
-
+			mosaic_rate_set();
 		});
+	}
+
+	function mosaic_rate_set(){
+		//console.log("mosaic_rate_set");
+		var pix = $("#mosaic_sqare_input").val();
+		pix = pixcel_check(pix);
+		$('#mosaic_sqare').attr({
+		       "max" : pix_list.length-1,
+		       "min" : 0
+		});
+		var mosaic_rate = pix_list[0];
+		var list_num = 0;
+		var imgheight = $("#height_input").val();
+		var imgwidth = $("#width_input").val();
+
+		for(var i=0;i<pix_list.length ;i++){
+				if(imgheight/pix_list[i]<=15){
+				mosaic_rate = pix_list[i];
+				list_num = i;
+				break;
+			}
+		}
+		list_num = pix_list.length -1 - list_num;
+
+		$('#mosaic_sqare').val(list_num);
+		$("#height_pixcel_input").val(imgheight/mosaic_rate);
+		$("#width_pixcel_input").val(imgwidth/mosaic_rate);
+
+		$("#height_pixcel_input").attr({"max" :imgheight/2,"min" : 2});
+		$("#width_pixcel_input").attr({"max" :imgwidth/2,"min" : 2});
+
+
 	}
 
 	//pixcelcheck
@@ -308,6 +346,7 @@
 	function getMinPix(A,B){
 		var Alist = divisor(A);
 		var Blist = divisor(B);
+
 		var commonList = new Array();
 
 		var res = 1;
@@ -393,6 +432,13 @@
     background-image:url("resources/images/load.gif");
 
 }
+.baseimage8_tdspan{
+    width: 200px;
+    height: 35px;
+    display: block;
+    font-size: 14px;
+    }
+
 
 </style>
 
@@ -464,10 +510,10 @@
 							<form id="my_form" enctype="multipart/form-data">
 								<input type="file" name="file" id="select_file" data-name="select_file" onchange="origin_image_send(this);">
 							</form>
-
-						<label class="mosaic_baseimages" for="baseimage8">
+							<label class="mosaic_baseimages" for="baseimage8">
 							</label>
 							<div id="output"></div>
+							<span class="baseimage8_tdspan">※縦横比1:1もしくは3:4、16:9の画像を推奨</span>
 						</td>
 
 					</tr>
@@ -500,13 +546,13 @@
 				</p>
 
 			</div>
-
- -->			<div id="flow4" class="mt20">
+ -->
+ 			<div id="flow4" class="mt20">
 				<p class="mosaic_flow_title">
-					<span class=mosaic_title_sqare></span>仕上がりサイズとモザイク密度指定
+					<span class=mosaic_title_sqare></span>仕上がり設定
 				</p>
 				<div class="fl">
-					<span class="slidlabel mt20">作成画像サイズ</span>
+					<span class="slidlabel mt20">◆仕上がりサイズ</span>
 				</div>
 				<div class="fl left_in">
 						<input type="range" name="image_rate" id="rate"	min=-100 max=100  value="0" style="width:200px">
@@ -516,19 +562,44 @@
 						</div>
 				</div>
 				<div class="fl" >
-					<span class="slidlabel mt20">モザイクサイズ</span>
+					<span class="slidlabel mt20">◆色調一致度</span>
 				</div>
-					<div class="fl left_in2">
-					<input type="range" name="mosaic_square" id="mosaic_sqare"	min=1 max=100 class="photo_size" value="50" style="width:200px">
-<!-- 						<input	type="number" min=5 max=100 id="mosaic_sqare_input"	class="photo_size_input" value="5"> px四方 -->
+				<div class="fl left_in2">
+			 		<input type="number" min ="10" max="100" id="diff_fix" value="60" class="mt15">　%
+ 				</div>
+			</div>
+			<div style="clear:both"></div>
+
+
+ 			<div id="flow5" class="mt20">
+				<p class="mosaic_flow_title">
+					<span class=mosaic_title_sqare></span>モザイク設定
+				</p>
+				<div class="fl" >
+					<span class="slidlabel mt20">◆モザイクサイズ</span>
+				</div>
+					<div class="fl left_in">
+					<input type="range" name="mosaic_square" id="mosaic_sqare"	min=-10 max=10 class="photo_size" value="0" style="width:200px">
 						<div>
 							縦<input	type="number" min=1  id="height_pixcel_input" class="photo_size_input ml15" > px
 							横<input	type="number" min=1 id="width_pixcel_input" class="photo_size_input ml15" > px
 						</div>
  				</div>
+ 				<div class="fl" >
+					<span class="slidlabel mt20">◆素材処理</span>
+				</div>
+				<div class="fl left_in2">
+					<div class="mt20">
+					<input type="radio" name="mozaic_treat" value="scale" id="type_scale" checked><label for="type_scale">変形</label>
+					<input type="radio" name="mozaic_treat" value="cut" id="type_cut" class="ml20"><label for="type_cut">トリミング</label>
+ 					</div>
+ 				</div>
+
+
 			</div>
 			<div style="clear:both"></div>
-			<div id="flow5">
+
+			<div id="flow6">
 				<div class="btn_space">
 					<form id="my_form" enctype="multipart/form-data">
 						<span class="btndiv_1" onclick="generate()">作成</span>

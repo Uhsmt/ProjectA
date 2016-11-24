@@ -1,0 +1,289 @@
+/* for mosaic page*/
+#wrapper{
+}
+* {
+    font-family: 'Hiragino Kaku Gothic ProN',Meiryo, sans-serif;
+}
+#mosaic_wrapper{
+    width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+#mosaic_header{
+	width:800px;
+	margin:0 auto;
+	color:white;
+    font-size: 25px;
+    font-family: inherit;
+}
+.mosaic_header_tab{
+     width: 310px;
+    height: 46px;
+    display: block;
+    background: #585858;
+    margin-bottom: 0px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-left: 0px;
+    color: #ffffff;
+    font-weight: bold;
+ }
+.mosaic_flow_title{
+	height: 40px;
+    background: #b9b9b9;
+    font-size: 20px;
+    line-height: 40px;
+    margin: 0 auto;
+    /* width: 300px; */
+    margin-left: 0px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    color: white;}
+
+#mosaic_wrapper input[type=number]{
+	width:50px;
+
+}
+#mosaic_drop_material{
+	width: 500px;
+    height: 200px;
+    display: block;
+    border-style: dotted;
+    border: 4px dotted #5ab4ca;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#mosaic_drop_image_show{
+	width: 800px;
+    height: 80px;
+    display: block;
+    overflow-x: auto;
+    background-color: #ececec;
+}
+
+#mosaic_wrapper input[type=radio] {
+	width:			15px;
+	height:			15px;
+	-moz-transform:		scale(1.4);
+	-webkit-transform:	scale(1.4);
+	transform:		scale(1.4);
+}
+
+#mosaic_create_window{
+    border: 3px dotted #b9b9b9;
+    width: 800px;
+    height: 510px;
+}
+
+.mosaic_baseimages img,.baseimage_none{
+	width: 150px;
+    display: block;
+    border: 1px solid gray;
+    cursor: pointer;
+    height: 100px;}
+
+.btndiv_1{
+    width: 85px;
+    height: 35px;
+    background: #c56637;
+    color: white;
+    text-align: center;
+    line-height: 35px;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    float: left;
+    margin: 0px 10px 0px 5px;
+    border: 1px solid black;
+    background: -webkit-gradient(linear, left top, left bottom, from(#00ccad), to(#004b99));
+    border: 1px solid #DDD;
+    color: #FFF;
+    padding: 10px 10px;
+ }
+.mosaic_title_sqare{
+	width: 20px;
+    height: 20px;
+    display: block;
+    background-color: #329fbd;;
+    float: left;
+    margin: 9px 5px 5px 0px;
+}
+
+
+/*common*/
+
+.mr1{ margin-right:1px }
+.mr2{ margin-right:2px }
+.mr3{ margin-right:3px }
+.mr4{ margin-right:4px }
+.mr5{ margin-right:5px }
+.mr6{ margin-right:6px }
+.mr7{ margin-right:7px }
+.mr8{ margin-right:8px }
+.mr9{ margin-right:9px }
+.mr10 { margin-right:10px }
+.mr11 { margin-right:11px }
+.mr12 { margin-right:12px }
+.mr13 { margin-right:13px }
+.mr14 { margin-right:14px }
+.mr15 { margin-right:15px }
+.mr20 { margin-right:20px }
+.mr30 { margin-right:30px }
+.mr40 { margin-right:40px }
+.mr50 { margin-right:50px }
+
+.ml1{ margin-left:1px }
+.ml2{ margin-left:2px }
+.ml3{ margin-left:3px }
+.ml4{ margin-left:4px }
+.ml5{ margin-left:5px }
+.ml6{ margin-left:6px }
+.ml7{ margin-left:7px }
+.ml8{ margin-left:8px }
+.ml9{ margin-left:9px }
+.ml10 { margin-left:10px }
+.ml11 { margin-left:11px }
+.ml12 { margin-left:12px }
+.ml13 { margin-left:13px }
+.ml14 { margin-left:14px }
+.ml15 { margin-left:15px }
+.ml20 { margin-left:20px }
+.ml30 { margin-left:30px }
+.ml40 { margin-left:40px }
+.ml50 { margin-left:50px }
+
+
+.mb1{ margin-bottom:1px }
+.mb2{ margin-bottom:2px }
+.mb3{ margin-bottom:3px }
+.mb4{ margin-bottom:4px }
+.mb5{ margin-bottom:5px }
+.mb6{ margin-bottom:6px }
+.mb7{ margin-bottom:7px }
+.mb8{ margin-bottom:8px }
+.mb9{ margin-bottom:9px }
+.mb10 { margin-bottom:10px }
+.mb11 { margin-bottom:11px }
+.mb12 { margin-bottom:12px }
+.mb13 { margin-bottom:13px }
+.mb14 { margin-bottom:14px }
+.mb15 { margin-bottom:15px }
+.mb20 { margin-bottom:20px }
+.mb30 { margin-bottom:30px }
+.mb40 { margin-bottom:40px }
+.mb50 { margin-bottom:50px }
+
+.mt1{ margin-top:1px }
+.mt2{ margin-top:2px }
+.mt3{ margin-top:3px }
+.mt4{ margin-top:4px }
+.mt5{ margin-top:5px }
+.mt6{ margin-top:6px }
+.mt7{ margin-top:7px }
+.mt8{ margin-top:8px }
+.mt9{ margin-top:9px }
+.mt10 { margin-top:10px }
+.mt11 { margin-top:11px }
+.mt12 { margin-top:12px }
+.mt13 { margin-top:13px }
+.mt14 { margin-top:14px }
+.mt15 { margin-top:15px }
+.mt20 { margin-top:20px }
+.mt30 { margin-top:30px }
+.mt40 { margin-top:40px }
+.mt50 { margin-top:50px }
+
+
+.pr1{ padding-right:1px }
+.pr2{ padding-right:2px }
+.pr3{ padding-right:3px }
+.pr4{ padding-right:4px }
+.pr5{ padding-right:5px }
+.pr6{ padding-right:6px }
+.pr7{ padding-right:7px }
+.pr8{ padding-right:8px }
+.pr9{ padding-right:9px }
+.pr10 { padding-right:10px }
+.pr11 { padding-right:11px }
+.pr12 { padding-right:12px }
+.pr13 { padding-right:13px }
+.pr14 { padding-right:14px }
+.pr15 { padding-right:15px }
+.pr20 { padding-right:20px }
+.pr30 { padding-right:30px }
+.pr40 { padding-right:40px }
+.pr50 { padding-right:50px }
+
+.pl1{ padding-left:1px }
+.pl2{ padding-left:2px }
+.pl3{ padding-left:3px }
+.pl4{ padding-left:4px }
+.pl5{ padding-left:5px }
+.pl6{ padding-left:6px }
+.pl7{ padding-left:7px }
+.pl8{ padding-left:8px }
+.pl9{ padding-left:9px }
+.pl10 { padding-left:10px }
+.pl11 { padding-left:11px }
+.pl12 { padding-left:12px }
+.pl13 { padding-left:13px }
+.pl14 { padding-left:14px }
+.pl15 { padding-left:15px }
+.pl20 { padding-left:20px }
+.pl30 { padding-left:30px }
+.pl40 { padding-left:40px }
+.pl50 { padding-left:50px }
+
+
+.pb1{ padding-bottom:1px }
+.pb2{ padding-bottom:2px }
+.pb3{ padding-bottom:3px }
+.pb4{ padding-bottom:4px }
+.pb5{ padding-bottom:5px }
+.pb6{ padding-bottom:6px }
+.pb7{ padding-bottom:7px }
+.pb8{ padding-bottom:8px }
+.pb9{ padding-bottom:9px }
+.pb10 { padding-bottom:10px }
+.pb11 { padding-bottom:11px }
+.pb12 { padding-bottom:12px }
+.pb13 { padding-bottom:13px }
+.pb14 { padding-bottom:14px }
+.pb15 { padding-bottom:15px }
+.pb20 { padding-bottom:20px }
+.pb30 { padding-bottom:30px }
+.pb40 { padding-bottom:40px }
+.pb50 { padding-bottom:50px }
+
+.pt1{ padding-top:1px }
+.pt2{ padding-top:2px }
+.pt3{ padding-top:3px }
+.pt4{ padding-top:4px }
+.pt5{ padding-top:5px }
+.pt6{ padding-top:6px }
+.pt7{ padding-top:7px }
+.pt8{ padding-top:8px }
+.pt9{ padding-top:9px }
+.pt10 { padding-top:10px }
+.pt11 { padding-top:11px }
+.pt12 { padding-top:12px }
+.pt13 { padding-top:13px }
+.pt14 { padding-top:14px }
+.pt15 { padding-top:15px }
+.pt20 { padding-top:20px }
+.pt30 { padding-top:30px }
+.pt40 { padding-top:40px }
+.pt50 { padding-top:50px }
+
+.fl{ float:left; }
+.fr{ float:right; }
+
+.clr{
+	  clear:both;
+}
+
+

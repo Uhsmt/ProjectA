@@ -2,121 +2,171 @@ package com.example.MosaicGenerator.Model;
 
 public class ColorModel {
 
-//	String x_address;
-//	String y_address;
-	private int Red;
-	private int Green;
-	private int Blue;
+	private int[][] red;// モザイク赤(1pixel)[縦][横]
+	private int[][] green;// モザイク緑(1pixel)[縦][横]
+	private int[][] blue;// モザイク青(1pixel)[縦][横]
+	private int[][] mozaicred;// モザイク指定コマ用[縦][横]
+	private int[][] mozaicgreen;// モザイク指定コマ用[縦][横]
+	private int[][] mozaicblue;// モザイク指定コマ用[縦][横]
 
-	private int Hvalue;
-	private int Svalue;
-	private int Vvalue;
 
-	private int height = 510;
-	private int width = 800;
-	private int minpix = 10;
+	private int[][] h;// モザイク赤(1pixel)[縦][横]
+	private int[][] s;// モザイク緑(1pixel)[縦][横]
+	private int[][] v;// モザイク青(1pixel)[縦][横]
+	private int[][] mozaich;// モザイク指定コマ用[縦][横]
+	private int[][] mozaics;// モザイク指定コマ用[縦][横]
+	private int[][] mozaicv;// モザイク指定コマ用[縦][横]
+
 
 
 	public ColorModel(){
 		//default
 	}
 
-	public ColorModel(int H,int S,int V){
-		this.Hvalue = H;
-		this.Svalue = S;
-		this.Vvalue = V;
 
+
+	public int[][] getRed() {
+		return red;
 	}
 
 
-	public int getRed() {
-		return Red;
+
+	public void setRed(int[][] red) {
+		this.red = red;
 	}
 
 
-	public void setRed(int red) {
-		Red = red;
+
+	public int[][] getGreen() {
+		return green;
 	}
 
 
-	public int getGreen() {
-		return Green;
+
+	public void setGreen(int[][] green) {
+		this.green = green;
 	}
 
 
-	public void setGreen(int green) {
-		Green = green;
+
+	public int[][] getBlue() {
+		return blue;
 	}
 
 
-	public int getBlue() {
-		return Blue;
+
+	public void setBlue(int[][] blue) {
+		this.blue = blue;
 	}
 
 
-	public void setBlue(int blue) {
-		Blue = blue;
+
+	public int[][] getMozaicred() {
+		return mozaicred;
 	}
 
 
-	public int getHvalue() {
-		return Hvalue;
+
+	public void setMozaicred(int[][] mozaicred) {
+		this.mozaicred = mozaicred;
 	}
 
 
-	public void setHvalue(int hvalue) {
-		Hvalue = hvalue;
+
+	public int[][] getMozaicgreen() {
+		return mozaicgreen;
 	}
 
 
-	public int getSvalue() {
-		return Svalue;
+
+	public void setMozaicgreen(int[][] mozaicgreen) {
+		this.mozaicgreen = mozaicgreen;
 	}
 
 
-	public void setSvalue(int svalue) {
-		Svalue = svalue;
+
+	public int[][] getMozaicblue() {
+		return mozaicblue;
 	}
 
 
-	public int getVvalue() {
-		return Vvalue;
+
+	public void setMozaicblue(int[][] mozaicblue) {
+		this.mozaicblue = mozaicblue;
 	}
 
 
-	public void setVvalue(int vvalue) {
-		Vvalue = vvalue;
+
+	public int[][] getH() {
+		return h;
 	}
 
 
-	public int getHeight() {
-		return height;
+
+	public void setH(int[][] h) {
+		this.h = h;
 	}
 
 
-	public void setHeight(int height) {
-		this.height = height;
+
+	public int[][] getS() {
+		return s;
 	}
 
 
-	public int getWidth() {
-		return width;
+
+	public void setS(int[][] s) {
+		this.s = s;
 	}
 
 
-	public void setWidth(int width) {
-		this.width = width;
+
+	public int[][] getV() {
+		return v;
 	}
 
 
-	public int getMinpix() {
-		return minpix;
+
+	public void setV(int[][] v) {
+		this.v = v;
 	}
 
 
-	public void setMinpix(int minpix) {
-		this.minpix = minpix;
+
+	public int[][] getMozaich() {
+		return mozaich;
+	}
+
+
+
+	public void setMozaich(int[][] mozaich) {
+		this.mozaich = mozaich;
+	}
+
+
+
+	public int[][] getMozaics() {
+		return mozaics;
+	}
+
+
+
+	public void setMozaics(int[][] mozaics) {
+		this.mozaics = mozaics;
+	}
+
+
+
+	public int[][] getMozaicv() {
+		return mozaicv;
+	}
+
+
+
+	public void setMozaicv(int[][] mozaicv) {
+		this.mozaicv = mozaicv;
 	}
 
 
 }
+

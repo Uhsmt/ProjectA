@@ -212,7 +212,7 @@
 		var mosaic_treat =$("input[name='mozaic_treat']:checked").val();
 		var data  = selected_id+"/"+ height + "/" +width +"/"+ height_pixcel + "/" + width_pixcel + "/" + isOrigin + "/" + diff_fix + "/" + mosaic_treat;
 
-//		alert(data);
+		//alert(data);
 
 		$.ajax({
 			type : "POST",
@@ -230,9 +230,6 @@
 				$("#mosaic_create_window").html("<img src='file1?"+timestamp+"''>");
 				$("#save_btn").html('<a href="file1" download="mosaic.png"><span class="btndiv_1" id="save_btn">保存</span></a>')
 				var top = ($("#flow6").position().top);
-				//$("body").scrollTop(top);
-
-
 				$('html,body').animate({scrollTop: top}, 300, 'swing');
 
 			},

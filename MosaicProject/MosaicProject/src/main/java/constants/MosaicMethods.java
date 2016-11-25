@@ -14,7 +14,7 @@ public class MosaicMethods {
 
 
 	// 材料の解析(素材リストの作成）
-	public static Object[][] materialdetail() {
+	public static Object[][] materialdetail(boolean isCuttype, int width, int height) {
 		System.out.println("★materiarl_detail");
 		//Generate元の画像リスト
 		File matefile = new File(Properties.materialpath);
@@ -27,16 +27,67 @@ public class MosaicMethods {
 		for (int i = 0; i < files.length; i++) {
 			try {
 				int c = 0, r = 0, g = 0, b = 0;
-				mateimage[i] = ImageIO.read(files[i]);
-				int w = mateimage[i].getWidth();
-				int h = mateimage[i].getHeight();
+				BufferedImage thismate = ImageIO.read(files[i]);
+				mateimage[i] = thismate;
 
-				for (int y = 0; y < h; y++) {
-					for (int x = 0; x < w; x++) {
-						c = mateimage[i].getRGB(x, y);
-						r += c >> 16 & 0xff;
-						g += c >> 8 & 0xff;
-						b += c & 0xff;
+				int w = thismate.getWidth();
+				int h = thismate.getHeight();
+
+				//Cuttype=Cutの時は、配置用のトリミングと合わせて分析範囲を変更
+				int x_start = 0;
+				int y_start= 0;
+				int h_2 = h;
+				int w_2 = w;
+
+				if(isCuttype ){
+					//素材サイズ
+					//モザイクと素材の比率一致
+					double mate_rate = w/h;
+					double mosaic_rate = width/height;
+
+					if( mosaic_rate != mate_rate){
+						double scale_d = 0;
+
+						//縦の余りを切る
+						if( mosaic_rate >mate_rate ){
+							scale_d = (w*1.0)/(width*1.0);
+							if(scale_d * height > h){
+								scale_d = (h*1.0)/(height*1.0);
+							}
+						}
+						//横の余りを切る
+						else{
+							scale_d = (h*1.0)/(height*1.0);
+							if(scale_d * width > w){
+								scale_d = ((w*1.0)/(width*1.0));
+							}
+						}
+						h_2 = (int)Math.floor(height * scale_d);
+						w_2 = (int)Math.floor(width * scale_d);
+
+						if(w_2 != w){
+							x_start = (w - w_2)/2;
+						}
+						if(h_2 != h){
+							y_start = (h - h_2)/2;
+						}
+						w_2 += x_start;
+						h_2 += y_start;
+					}
+				}
+				for (int y = y_start; y < h_2  ; y++) {
+					for (int x = x_start ; x < w_2  ; x++) {
+						try{
+							c = thismate.getRGB(x, y);
+							r += c >> 16 & 0xff;
+							g += c >> 8 & 0xff;
+							b += c & 0xff;
+
+						}catch(Exception e){
+							System.out.println(x +"," +y );
+							e.printStackTrace();
+							break;
+						}
 					}
 				}
 				// 画像一枚の平均色
@@ -201,9 +252,9 @@ public class MosaicMethods {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		res.setMozaicblue(mozaicblue);
-		res.setMozaicgreen(mozaicgreen);
-		res.setMozaicred(mozaicred);
+		res.setBlue(mozaicblue);
+		res.setGreen(mozaicgreen);
+		res.setRed(mozaicred);
 
 		return res;
 

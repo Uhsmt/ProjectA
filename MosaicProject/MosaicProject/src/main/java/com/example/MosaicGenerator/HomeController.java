@@ -90,7 +90,7 @@ public class HomeController {
 			w_pix = Integer.parseInt(data[4]);
 			isOrigin = data[5];
 			diff_fix = Integer.parseInt(data[6]);
-			if(data[7] == "cut"){
+			if(data[7].equals("cut")){
 				isCuttype = true;
 			}
 		}catch(Exception e){
@@ -108,14 +108,16 @@ public class HomeController {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		System.out.println("height:" + height);
+
+		//確認用ログ
+/*		System.out.println("height:" + height);
 		System.out.println("width:" + width);
 		System.out.println("heightpix:" + h_pix);
 		System.out.println("widthpix:" + w_pix);
 		System.out.println("selectid:" + selectid);
 		System.out.println("diff_fix:" + diff_fix);
 		System.out.println("cut:" + isCuttype);
-
+*/
 		//完成想定図の分析
 		String return_path = "";
 		//ファイルをリサイズ
@@ -180,13 +182,13 @@ public class HomeController {
 		color.setV(V);
 
 		// 素材の画像データ解析
-		Object[][] materiars =  MosaicMethods.materialdetail();
+		Object[][] materiars =  MosaicMethods.materialdetail(isCuttype,w_pix,h_pix);
 
 		// 完成図の1マスごとのカラー解析
 		color = MosaicMethods.divide(color, w_pix, h_pix , width ,height);
 
 		// 画像のマッチング
-		return_path =matching_hsv(tempfile,w_pix,h_pix,color,materiars,diff_fix);
+		return_path =matching_hsv(tempfile,w_pix,h_pix,color,materiars,diff_fix,isCuttype);
 
 		file1(res) ;
 		return return_path;
@@ -213,8 +215,8 @@ public class HomeController {
 	//以下使用メソッド
 
 	// マッチング処理 HSV判定
-	public String  matching_hsv(File file, int width ,int height ,ColorModel color ,Object[][] materiars, int diff_fix) {
-		System.out.println("★matching2★");
+	public String  matching_hsv(File file, int width ,int height ,ColorModel color ,Object[][] materiars, int diff_fix ,boolean isCuttype) {
+		System.out.println("★matching2★" + width +"," + height );
 		BufferedImage readImage = null;
 		BufferedImage img = null;
 		File matefile = new File(Properties.materialpath);
@@ -226,7 +228,6 @@ public class HomeController {
 		for (int i = 0; i < files.length; i++) {
 			try {
 				mateimage[i] = ImageIO.read(files[i]);
-//				System.out.println( "\t" +  files[i].getPath());
 			} catch (Exception e) {
 				e.printStackTrace();
 				mateimage = null;
@@ -236,10 +237,7 @@ public class HomeController {
 		// 画像作成＆保存
 		try {
 			readImage = ImageIO.read(file);
-			System.out.println( "file_path:" + file.getAbsolutePath());
-			System.out.println(readImage.getWidth() + "/" + width);
-			System.out.println(readImage.getHeight() + "/" + height);
-
+			//System.out.println( "file_path:" + file.getAbsolutePath());
 
 			int w = readImage.getWidth() / width; // 横
 			int h = readImage.getHeight() / height; // 縦
@@ -247,11 +245,9 @@ public class HomeController {
 			int num = 0;
 			//int roop = 0;
 			img = new BufferedImage(readImage.getWidth(), readImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+			//１マス
 			Graphics grph = img.getGraphics();
-
-			System.out.println("h:" + h);
-			System.out.println("w:" + w );
-
 
 			int last_roop = 0;
 			// 縦
@@ -261,9 +257,9 @@ public class HomeController {
 
 				for (int x = 0; x < w; x++) {
 
-					int r1 = color.getMozaicred()[x][y];
-					int g1 = color.getMozaicgreen()[x][y];
-					int b1 = color.getMozaicblue()[x][y];
+					int r1 = color.getRed()[x][y];
+					int g1 = color.getGreen()[x][y];
+					int b1 = color.getBlue()[x][y];
 					min = 0;
 
 					//System.out.println(roop + ":");
@@ -298,9 +294,62 @@ public class HomeController {
 							last_roop = i2;
 						}
 					}
+					BufferedImage thismate = mateimage[num];
 
-					grph.drawImage(mateimage[num], x * width, y * height, width, height,
-							null);
+					//カット指定の場合
+					if(isCuttype){
+						//素材サイズ
+						int MH = thismate.getHeight();
+						int MW = thismate.getWidth();
+
+						//モザイクと素材の比率一致
+						if(width / height  * MH == MW){
+							grph.drawImage(thismate, x * width, y * height, width, height,null);
+						}else{
+							double scale_d = 0;
+							double mosaic_rate = width/height;
+							double mate_rate = MH/MW;
+
+							//縦の余りを切る
+							if( mosaic_rate >mate_rate ){
+								scale_d = ((MW*1.0)/(width*1.0));
+								if(scale_d * height > MH){
+									scale_d = ((MH*1.0)/(height*1.0));
+								}
+							}
+							//横の余りを切る
+							else{
+								scale_d = ((MH*1.0)/(height*1.0));
+								if(scale_d * width > MW){
+									scale_d = ((MW*1.0)/(width*1.0));
+								}
+							}
+							int MH_2 = (int)Math.floor(height * scale_d);
+							int MW_2 = (int)Math.floor(width * scale_d);
+
+							int dx1,dy1,dx2,dy2,sx1,sy1,sx2,sy2;
+							dx1 = x * width;
+							dy1 = y * height;
+							dx2 = dx1 + width;
+							dy2 = dy1 + height;
+							sx1 = 0;
+							sy1 = 0;
+
+							if(MW_2 != MW){
+								sx1 = (MW-MW_2)/2;
+							}
+							if(MH_2 != MH){
+								sy1 =  (MH-MH_2)/2;
+							}
+							sx2 = sx1 + MW_2;
+							sy2 = sy1 + MH_2;
+							grph.drawImage(thismate,dx1, dy1,dx2,dy2,sx1, sy1,sx2,sy2,null);
+						}
+					}
+					//縮小指定の場合
+					else{
+						grph.drawImage(thismate, x * width, y * height, width, height,null);
+					}
 				}
 			}
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHss");
@@ -323,7 +372,7 @@ public class HomeController {
 
 	}
 
-	// マッチング処理 RGB判定
+	// マッチング処理 RGB判定(未使用）
 	public String  matching_rgb(File file, int width ,int height ,ColorModel color ,Object[][] materiars) {
 		System.out.println("★matching");
 		BufferedImage readImage = null;
@@ -369,9 +418,9 @@ public class HomeController {
 				// 横
 				for (int x = 0; x < w; x++) {
 
-					int r1 = color.getMozaicred()[x][y];
-					int g1 = color.getMozaicgreen()[x][y];
-					int b1 = color.getMozaicblue()[x][y];
+					int r1 = color.getRed()[x][y];
+					int g1 = color.getGreen()[x][y];
+					int b1 = color.getBlue()[x][y];
 
 					for (int i = 0; i < materiars.length; i++) {
 						int r2 = (Integer) materiars[i][1];

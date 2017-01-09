@@ -7,9 +7,9 @@ public class Properties {
 	private Properties(){}
 	// 定数
 	public static final String temppath =// "C:/Users/Hashimoto/Documents/ProjectA/MosaicProject/src/main/webapp/resources/images/temp/";//アップ画像保存場所 変更可
-									"C://mosaic/origin_base/";
+									"C://GIT/画像保存";
 	public static final String materialpath = //"C:/Users/Hashimoto/Documents/ProjectA/MosaicProject/src/main/webapp/resources/images/material/";//素材画像場所 変更可
-												"C://mosaic/materiars/";
+												"C://GIT/素材保管";
 	public static final String templatepath = "C://mosaic/template/";
 	public static final String mozaicfolder = //"C:/Users/Hashimoto/Documents/ProjectA/MosaicProject/src/main/webapp/resources/mozaic/";
 	"C://mosaic/";

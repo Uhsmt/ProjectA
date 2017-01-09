@@ -1,6 +1,7 @@
 package com.example.MosaicGenerator;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -181,14 +182,58 @@ public class HomeController {
 		color.setS(S);
 		color.setV(V);
 
-		// 素材の画像データ解析
+		// 素材の画像データ解析ColorModel color = new ColorModel();
 		Object[][] materiars =  MosaicMethods.materialdetail(isCuttype,w_pix,h_pix);
 
 		// 完成図の1マスごとのカラー解析
 		color = MosaicMethods.divide(color, w_pix, h_pix , width ,height);
 
 		// 画像のマッチング
-		return_path =matching_hsv(tempfile,w_pix,h_pix,color,materiars,diff_fix,isCuttype);
+		return_path = matching_hsv(tempfile,w_pix,h_pix,color,materiars,diff_fix,isCuttype);
+
+		//はぎー追加
+		readImage = ImageIO.read(tempfile);
+		int w_3 = readImage.getWidth();
+		int h_3 = readImage.getHeight();
+
+		BufferedImage writeImage = new BufferedImage(w_3, h_3, BufferedImage.TYPE_INT_ARGB);
+
+		int r = 0, g = 0, b = 0, a = 0;
+		int c=0;
+		for (int y = 0; y < h_3; y++) {
+			    for (int x = 0; x < w_3; x++) {
+			    c = readImage.getRGB(x, y);
+			    // イメージのアルファ値を元イメージの半分にする。
+			    a = (c >> 24) & 0xff;
+				r = (c >> 16) & 0xFF;
+				g = (c >> 8) & 0xFF;
+			    int rgb = color.argb(a/2 ,  r, g, b);
+			    writeImage.setRGB(x, y, rgb);
+			    }
+			}
+		String created_path_test = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHss");
+		Date date = new Date();
+		String str_date = sdf.format(date);
+		created_path_test = Properties.mozaicfolder + "mosaic_test"+str_date+".png";
+		ImageIO.write(writeImage, "png", new File(created_path_test));
+
+	      /* 画像の重ね合わせ */
+		BufferedImage img = ImageIO.read(new File(return_path));
+		BufferedImage img2 = ImageIO.read(new File(created_path_test));
+		Graphics2D gr = img.createGraphics();
+		gr.drawImage(img2,10,10,null);
+		gr.dispose();
+		String created_path_wrap = "";
+		created_path_wrap = Properties.mozaicfolder + "mosaic_test"+str_date+".png";
+		ImageIO.write(img, "png", new File(created_path_wrap));
+		this.image_file_name = created_path_test;
+
+
+		return_path = created_path_wrap;
+		//はぎー追加
+
+
 
 		file1(res) ;
 		return return_path;

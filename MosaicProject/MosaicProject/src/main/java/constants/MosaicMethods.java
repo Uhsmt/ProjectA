@@ -26,7 +26,7 @@ public class MosaicMethods {
 
 		for (int i = 0; i < files.length; i++) {
 			try {
-				int c = 0, r = 0, g = 0, b = 0;
+				int c = 0, r = 0, g = 0, b = 0, a = 0;
 				BufferedImage thismate = ImageIO.read(files[i]);
 				mateimage[i] = thismate;
 
@@ -82,6 +82,7 @@ public class MosaicMethods {
 							r += c >> 16 & 0xff;
 							g += c >> 8 & 0xff;
 							b += c & 0xff;
+							a = (c >> 24) & 0xff;
 
 						}catch(Exception e){
 							System.out.println(x +"," +y );
@@ -258,6 +259,36 @@ public class MosaicMethods {
 
 		return res;
 
+	}
+	public static String test(int w, int h , File file) {
+		System.out.println("★resize");
+		BufferedImage readImage = null;
+		BufferedImage img = null;
+
+		String res = "";
+
+		// 画像作成＆保存
+		try {
+			readImage = ImageIO.read(file);
+
+			img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+			Graphics grph = img.getGraphics();
+
+			grph.drawImage(readImage, 1, 1, w, h, null);
+
+			String tempimagepath = Properties.temppath + "temp.png";
+			ImageIO.write(img, "png", new File(tempimagepath));
+			res = tempimagepath;
+		} catch (Exception e) {
+			e.printStackTrace();
+			readImage = null;
+			img = null;
+		} finally {
+			readImage = null;
+			img = null;
+		}
+
+		return res;
 	}
 
 

@@ -192,6 +192,9 @@ public class HomeController {
 		return_path = matching_hsv(tempfile,w_pix,h_pix,color,materiars,diff_fix,isCuttype);
 
 		//はぎー追加
+		if(data[8].equals("wrap")){
+
+		}
 		readImage = ImageIO.read(tempfile);
 		int w_3 = readImage.getWidth();
 		int h_3 = readImage.getHeight();
@@ -205,9 +208,10 @@ public class HomeController {
 			    c = readImage.getRGB(x, y);
 			    // イメージのアルファ値を元イメージの半分にする。
 			    a = (c >> 24) & 0xff;
-				r = (c >> 16) & 0xFF;
-				g = (c >> 8) & 0xFF;
-			    int rgb = color.argb(a/2 ,  r, g, b);
+				r = (c >> 16) & 0xff;
+				g = (c >> 8) & 0xff;
+				b = c & 0xff;
+			    int rgb = color.argb( a/2, r, g, b);
 			    writeImage.setRGB(x, y, rgb);
 			    }
 			}
@@ -222,13 +226,12 @@ public class HomeController {
 		BufferedImage img = ImageIO.read(new File(return_path));
 		BufferedImage img2 = ImageIO.read(new File(created_path_test));
 		Graphics2D gr = img.createGraphics();
-		gr.drawImage(img2,10,10,null);
+		gr.drawImage(img2,0,0,null);
 		gr.dispose();
 		String created_path_wrap = "";
 		created_path_wrap = Properties.mozaicfolder + "mosaic_test"+str_date+".png";
 		ImageIO.write(img, "png", new File(created_path_wrap));
 		this.image_file_name = created_path_test;
-
 
 		return_path = created_path_wrap;
 		//はぎー追加

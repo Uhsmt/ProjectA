@@ -210,7 +210,8 @@
 		}
 		diff_fix = 100 -diff_fix;
 		var mosaic_treat =$("input[name='mozaic_treat']:checked").val();
-		var data  = selected_id+"/"+ height + "/" +width +"/"+ height_pixcel + "/" + width_pixcel + "/" + isOrigin + "/" + diff_fix + "/" + mosaic_treat;
+		var mozaic_wrapping =$("input[name='mozaic_wrapping']:checked").val();
+		var data  = selected_id+"/"+ height + "/" +width +"/"+ height_pixcel + "/" + width_pixcel + "/" + isOrigin + "/" + diff_fix + "/" + mosaic_treat + "/" + mozaic_wrapping;
 
 		//alert(data);
 
@@ -229,7 +230,7 @@
 				var timestamp = new Date().getTime();
 				$("#mosaic_create_window").html("<img src='file1?"+timestamp+"''>");
 				$("#save_btn").html('<a href="file1" download="mosaic.png"><span class="btndiv_1" id="save_btn">保存</span></a>')
-				var top = ($("#flow6").position().top);
+				var top = ($("#flow7").position().top);
 				$('html,body').animate({scrollTop: top}, 300, 'swing');
 
 			},
@@ -591,12 +592,26 @@
 					<input type="radio" name="mozaic_treat" value="cut" id="type_cut" class="ml20"><label for="type_cut">トリミング</label>
  					</div>
  				</div>
-
-
 			</div>
 			<div style="clear:both"></div>
 
-			<div id="flow6">
+			<div id="flow6" class="mt20">
+				<p class="mosaic_flow_title">
+					<span class=mosaic_title_sqare></span>重ねますよ設定
+				</p>
+ 				<div class="fl" >
+					<span class="slidlabel mt20">◆重ね処理</span>
+				</div>
+				<div class="fl left_in2">
+					<div class="mt20">
+					<input type="radio" name="mozaic_wrapping" value="nowrap" id="type_nowrap" checked><label for="type_nowrap">重る</label>
+					<input type="radio" name="mozaic_wrapping" value="wrap" id="type_wrap" class="ml20"><label for="type_wrap">重ねない</label>
+ 					</div>
+ 				</div>
+			</div>
+			<div style="clear:both"></div>
+
+			<div id="flow7">
 				<div class="btn_space">
 					<form id="my_form" enctype="multipart/form-data">
 						<span class="btndiv_1" onclick="generate()">作成</span>

@@ -26,8 +26,8 @@ public class MosaicMethods {
 
 		for (int i = 0; i < files.length; i++) {
 			try {
-				int c = 0, r = 0, g = 0, b = 0, a = 0;
-				BufferedImage thismate = ImageIO.read(files[i]);
+				int c = 0, r = 0, g = 0, b = 0;
+						BufferedImage thismate = ImageIO.read(files[i]);
 				mateimage[i] = thismate;
 
 				int w = thismate.getWidth();
@@ -82,7 +82,6 @@ public class MosaicMethods {
 							r += c >> 16 & 0xff;
 							g += c >> 8 & 0xff;
 							b += c & 0xff;
-							a = (c >> 24) & 0xff;
 
 						}catch(Exception e){
 							System.out.println(x +"," +y );

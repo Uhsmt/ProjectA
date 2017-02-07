@@ -1,7 +1,6 @@
 package com.example.MosaicGenerator;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -191,16 +190,20 @@ public class HomeController {
 		// 画像のマッチング
 		return_path = matching_hsv(tempfile,w_pix,h_pix,color,materiars,diff_fix,isCuttype);
 
-		//はぎー追加
+		// 20170207 mod kodama
+		// 画像を重ねる transparentは画面から取得する透過率。とりあえず50％
+		Boolean success = MosaicMethods.wrap(tempfile, color, return_path, 50);
+
+		//はぎー追加 // 20170207 mod kodama
+		/*
 		if(data[8].equals("wrap")){
 
 		}
+		//元画像読み込み
 		readImage = ImageIO.read(tempfile);
 		int w_3 = readImage.getWidth();
 		int h_3 = readImage.getHeight();
-
 		BufferedImage writeImage = new BufferedImage(w_3, h_3, BufferedImage.TYPE_INT_ARGB);
-
 		int r = 0, g = 0, b = 0, a = 0;
 		int c=0;
 		for (int y = 0; y < h_3; y++) {
@@ -214,30 +217,29 @@ public class HomeController {
 			    int rgb = color.argb( a/2, r, g, b);
 			    writeImage.setRGB(x, y, rgb);
 			    }
-			}
-		String created_path_test = "";
+		}
+		String created_path_test = ""; //透過した画像の保存先
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHss");
 		Date date = new Date();
 		String str_date = sdf.format(date);
 		created_path_test = Properties.mozaicfolder + "mosaic_test"+str_date+".png";
 		ImageIO.write(writeImage, "png", new File(created_path_test));
 
-	      /* 画像の重ね合わせ */
-		BufferedImage img = ImageIO.read(new File(return_path));
-		BufferedImage img2 = ImageIO.read(new File(created_path_test));
+	       画像の重ね合わせ
+		BufferedImage img = ImageIO.read(new File(return_path)); // モザイク画像
+		BufferedImage img2 = ImageIO.read(new File(created_path_test)); // 透過画像
 		Graphics2D gr = img.createGraphics();
 		gr.drawImage(img2,0,0,null);
 		gr.dispose();
-		String created_path_wrap = "";
-		created_path_wrap = Properties.mozaicfolder + "mosaic_test"+str_date+".png";
-		ImageIO.write(img, "png", new File(created_path_wrap));
-		this.image_file_name = created_path_test;
-
-		return_path = created_path_wrap;
+		//String created_path_wrap = "";
+		//created_path_wrap = Properties.mozaicfolder + "mosaic_test"+str_date+".png";
+		//ImageIO.write(img, "png", new File(created_path_wrap));
+		// モザイク画像を上書き
+		ImageIO.write(img, "png", new File(return_path));
+		//this.image_file_name = created_path_test;
+		//return_path = created_path_wrap;
 		//はぎー追加
-
-
-
+*/
 		file1(res) ;
 		return return_path;
 	}

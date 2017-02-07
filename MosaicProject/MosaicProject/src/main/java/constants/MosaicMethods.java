@@ -1,8 +1,11 @@
 package constants;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -199,7 +202,6 @@ public class MosaicMethods {
 		return res;
 	}
 
-
 	// 指定されたピクセルサイズが1コマとなるようにする
 	public static ColorModel divide(ColorModel mosaic,int mosaic_w , int mosaic_h,int w, int h ) {
 		System.out.println("★divide");
@@ -259,6 +261,7 @@ public class MosaicMethods {
 		return res;
 
 	}
+
 	public static String test(int w, int h , File file) {
 		System.out.println("★resize");
 		BufferedImage readImage = null;
@@ -290,5 +293,51 @@ public class MosaicMethods {
 		return res;
 	}
 
+	// 20170207 add kodama
+	public static Boolean wrap(File tempfile,ColorModel color,String return_path,float transparent)
+	{
+		// 選択元画像
+		BufferedImage readImage = null;
+		try{
+		readImage = ImageIO.read(tempfile);
+		int w_3 = readImage.getWidth();
+		int h_3 = readImage.getHeight();
+		BufferedImage writeImage = new BufferedImage(w_3, h_3, BufferedImage.TYPE_INT_ARGB);
+		int r = 0, g = 0, b = 0, a = 0;
+		int c=0;
+		for (int y = 0; y < h_3; y++) {
+			    for (int x = 0; x < w_3; x++) {
+			    c = readImage.getRGB(x, y);
+			    // イメージのアルファ値を元イメージの半分にする。
+			    a = (c >> 24) & 0xff;
+				r = (c >> 16) & 0xff;
+				g = (c >> 8) & 0xff;
+				b = c & 0xff;
+			    int rgb = color.argb( (int) (a*(transparent/100)), r, g, b);
+			    //int rgb = color.argb( a/2, r, g, b);
+			    writeImage.setRGB(x, y, rgb);
+			    }
+		}
+		String created_path_test = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHss");
+		Date date = new Date();
+		String str_date = sdf.format(date);
+		created_path_test = Properties.mozaicfolder + "mosaic_test"+str_date+".png";
+		//透過した画像保存
+		ImageIO.write(writeImage, "png", new File(created_path_test));
 
+	      /* 画像の重ね合わせ */
+		BufferedImage img = ImageIO.read(new File(return_path)); // モザイク画像
+		BufferedImage img2 = ImageIO.read(new File(created_path_test)); // 透過画像
+		Graphics2D gr = img.createGraphics();
+		gr.drawImage(img2,0,0,null);
+		gr.dispose();
+		// モザイク画像を上書き
+		ImageIO.write(img, "png", new File(return_path));
+		} catch(Exception e){
+			readImage = null;
+			return false;
+		}
+		return true;
+	}
 }

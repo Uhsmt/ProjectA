@@ -294,7 +294,7 @@ public class MosaicMethods {
 	}
 
 	// 20170207 add kodama
-	public static Boolean wrap(File tempfile,ColorModel color,String return_path,int wrap_fix)
+	public static Boolean wrap(File tempfile,ColorModel color,String return_path,float wrap_fix)
 	{
 		// 選択元画像
 		BufferedImage readImage = null;

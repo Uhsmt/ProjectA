@@ -210,10 +210,13 @@
 		}
 		diff_fix = 100 -diff_fix;
 		var mosaic_treat =$("input[name='mozaic_treat']:checked").val();
-		var mozaic_wrapping =$("input[name='mozaic_wrapping']:checked").val();
-		var data  = selected_id+"/"+ height + "/" +width +"/"+ height_pixcel + "/" + width_pixcel + "/" + isOrigin + "/" + diff_fix + "/" + mosaic_treat + "/" + mozaic_wrapping;
 
-		//alert(data);
+		var wrap_fix = $("#wrap_fix").val();
+		if(wrap_fix ==""){
+			wrap_fix = 0;
+		}
+		var data  = selected_id+"/"+ height + "/" +width +"/"+ height_pixcel + "/" + width_pixcel + "/" + isOrigin + "/" + diff_fix + "/" + mosaic_treat +"/" + wrap_fix;
+		//alert(wrap_fix);
 
 		$.ajax({
 			type : "POST",
@@ -603,10 +606,7 @@
 					<span class="slidlabel mt20">◆重ね処理</span>
 				</div>
 				<div class="fl left_in2">
-					<div class="mt20">
-					<input type="radio" name="mozaic_wrapping" value="nowrap" id="type_nowrap" checked><label for="type_nowrap">重る</label>
-					<input type="radio" name="mozaic_wrapping" value="wrap" id="type_wrap" class="ml20"><label for="type_wrap">重ねない</label>
- 					</div>
+			 		<input type="number" min ="0" max="100" id="wrap_fix" step=10 value="10" class="mt15">%
  				</div>
 			</div>
 			<div style="clear:both"></div>

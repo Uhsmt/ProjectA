@@ -80,6 +80,9 @@ public class HomeController {
 		String isOrigin = "false";
 
 		int diff_fix = 0;
+		//▼add m.hagihara 2017/02/19 重ね処理用追加
+		int wrap_fix = 0;
+		//▲add m.hagihara 2017/02/19 重ね処理用追加
 		boolean isCuttype = false;
 
 		try{
@@ -93,6 +96,9 @@ public class HomeController {
 			if(data[7].equals("cut")){
 				isCuttype = true;
 			}
+			//▼add m.hagihara 2017/02/19 重ね処理用追加
+			wrap_fix = Integer.parseInt(data[8]);
+			//▲add m.hagihara 2017/02/19 重ね処理用追加
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -190,9 +196,15 @@ public class HomeController {
 		// 画像のマッチング
 		return_path = matching_hsv(tempfile,w_pix,h_pix,color,materiars,diff_fix,isCuttype);
 
+		//▼add m.hagihara 2017/02/19 重ね処理用追加
+		if(wrap_fix > 0){
+			Boolean success = MosaicMethods.wrap(tempfile, color, return_path, wrap_fix);
+		}
+		//▲add m.hagihara 2017/02/19 重ね処理用追加
+
 		// 20170207 mod kodama
 		// 画像を重ねる transparentは画面から取得する透過率。とりあえず50％
-		Boolean success = MosaicMethods.wrap(tempfile, color, return_path, 50);
+		//Boolean success = MosaicMethods.wrap(tempfile, color, return_path, 50);
 
 		//はぎー追加 // 20170207 mod kodama
 		/*

@@ -294,7 +294,7 @@ public class MosaicMethods {
 	}
 
 	// 20170207 add kodama
-	public static Boolean wrap(File tempfile,ColorModel color,String return_path,float transparent)
+	public static Boolean wrap(File tempfile,ColorModel color,String return_path,int wrap_fix)
 	{
 		// 選択元画像
 		BufferedImage readImage = null;
@@ -313,7 +313,7 @@ public class MosaicMethods {
 				r = (c >> 16) & 0xff;
 				g = (c >> 8) & 0xff;
 				b = c & 0xff;
-			    int rgb = color.argb( (int) (a*(transparent/100)), r, g, b);
+			    int rgb = color.argb( (int) (a*(wrap_fix/100)), r, g, b);
 			    //int rgb = color.argb( a/2, r, g, b);
 			    writeImage.setRGB(x, y, rgb);
 			    }
@@ -340,4 +340,16 @@ public class MosaicMethods {
 		}
 		return true;
 	}
+	//▼add m.hagihara 2017/02/19 数値チェック
+	/*
+	public boolean isNumber(String num) {
+	    try {
+	        Integer.parseInt(num);
+	        return true;
+	        } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+	//▲add m.hagihara 2017/02/19 数値チェック
+	*/
 }

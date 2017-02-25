@@ -600,7 +600,7 @@
 
 			<div id="flow6" class="mt20">
 				<p class="mosaic_flow_title">
-					<span class=mosaic_title_sqare></span>重ねますよ設定
+					<span class=mosaic_title_sqare></span>画像重ね設定
 				</p>
  				<div class="fl" >
 					<span class="slidlabel mt20">◆重ね処理</span>

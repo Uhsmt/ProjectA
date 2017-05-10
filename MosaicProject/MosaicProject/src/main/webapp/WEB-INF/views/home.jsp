@@ -434,6 +434,7 @@
 
 	    // ピクチャー投稿
 		function fbEntryPhoto() {
+			FileName = 'http://52.193.130.108/MosaicGenerator/file1?1494390221927';
 			if (FileName !==''){
 	                   FB.api("/me/photos","POST",{
 	                                 "url":FileName,
@@ -475,6 +476,7 @@
             $(this).html($(this).html().replace(/((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g, '<a href="$1" target="_blank">チェック</a> '));
       });
 	});
+
 </script>
 
 <style>
@@ -543,6 +545,14 @@
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 </script>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.9&appId=221647884979390";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <div id="fb-root"></div>
 	<div id="wrapper">
 		<div id="mosaic_header">
@@ -724,6 +734,7 @@
 				</div>
 				<div class="clr"></div>
 				<ul id="fb-list"></ul>
+				<div class="fb-share-button" data-href="http://52.193.130.108/MosaicGenerator/" data-layout="button" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A8080%2FMosaicGenerator%2F&amp;src=sdkpreparse">シェア</a></div>
 			</div>
 		</div>
 	</div>

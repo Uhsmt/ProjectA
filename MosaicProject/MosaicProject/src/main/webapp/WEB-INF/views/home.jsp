@@ -708,19 +708,6 @@
 			</div>
 			<div style="clear:both"></div>
 
-			<div id="flow6" class="mt20">
-				<p class="mosaic_flow_title">
-					<span class=mosaic_title_sqare></span>画像重ね設定
-				</p>
- 				<div class="fl" >
-					<span class="slidlabel mt20">◆重ね処理</span>
-				</div>
-				<div class="fl left_in2">
-			 		<input type="number" min ="0" max="100" id="wrap_fix" step=10 value="10" class="mt15">%
- 				</div>
-			</div>
-			<div style="clear:both"></div>
-
 			<div id="flow7">
 				<div class="btn_space">
 					<form id="my_form" enctype="multipart/form-data">

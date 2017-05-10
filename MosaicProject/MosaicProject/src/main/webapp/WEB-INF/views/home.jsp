@@ -27,6 +27,8 @@
 	var origin_path;
 	var max_width = 800;
 	var pix_list = new Array();
+	var FileName ='';
+	var urlpath ='http://52.193.130.108/MosaicGenerator/file1?1494390221927';
 
 	$(function() {
 		//デフォルト設定
@@ -235,7 +237,7 @@
 				$("#save_btn").html('<a href="file1" download="mosaic.png"><span class="btndiv_1" id="save_btn">保存</span></a>')
 				var top = ($("#flow7").position().top);
 				$('html,body').animate({scrollTop: top}, 300, 'swing');
-
+				FileName = urlpath + timestamp;
 			},
 			error : function(XMLHttpRequest, status, errorThrown) {
 				alert("失敗しました。");
@@ -387,8 +389,92 @@
 	function removeLoading(){
 	 $("#loading").remove();
 	}
+	function fbAsyncInit(){
+	    // FB初期化
+	    FB.init({
+	        appId      : '221647884979390',
+	        xfbml      : true,
+	        version    : 'v2.8'
+	    });
+	    // 変数定義
+	    var login = $('#login');
+	    // ステータス確認
+	    FB.getLoginStatus(function(response) {
+	      if (response.status === 'connected') {
+	        // ログインしてるしアプリ連携してる時
+	        addPicture();
+	      } else if (response.status === 'not_authorized') {
+	        // ログインしてるけどアプリ連携はしてない時
+	        loginPicture()
+	      } else {
+	        // ログインしてない時
+	    	  loginPicture()
+	      }
+	    });
 
 
+	    // ログイン
+	    function loginPicture() {
+	        login.click(function(){
+	                FB.login(function(response) {
+	                   if (response.authResponse) {
+	                     fbEntryPhoto();
+	                   } else {
+	                     alert ('ログインのレスポンスがないみたい。もうちょっとしてからもう一度試してね！');
+	                   }
+	                 }, {scope:'publish_actions'});
+	        });
+	    }
+	    // 投稿ボタン
+	    function addPicture() {
+	        login.click(function(){
+	                fbEntryPhoto();
+	        });
+	    }
+
+	    // ピクチャー投稿
+		function fbEntryPhoto() {
+			if (FileName !==''){
+	                   FB.api("/me/photos","POST",{
+	                                 "url":FileName,
+	                                 "message": 'test投稿です'
+	                              },function (response) {
+	                                   if (response && !response.error) {
+	                                	   alert ('画像の投稿ができました！またやってね！');
+	                                   } else {
+	                                	   alert ('画像の投稿に失敗しました。もう少したってからやってみてね！');
+	                                   }
+	                              }
+	                   );
+	                   FB.api('/me/permissions', 'DELETE');
+			} else {
+				alert("モザイクフォトを作成してください。");
+			}
+	    }
+	}
+	$.ajax({
+		type: 'GET',
+		url: 'https://graph.facebook.com/v2.3/126727104544209/feed?access_token=503118756502625|AId-nVagWtV8IO5VxZsmD3NQWrw',
+		dataType: 'json',
+		success: function(json) {
+			var COUNT = 5;
+			for (var i=0; i<=(COUNT-1); i++) {
+				var obj = json.data[i];
+        var msg = obj.message;
+        var pic = obj.picture;
+        var time = obj.created_time.replace(/[A-Z].*0/g,'').replace(/-/g,'/');
+				$('#fb-list').append('<li><time>'+time+'</time><span><img src="'+pic+'"></span>'+msg+'</li>');
+
+			}
+		},
+		error: function() {
+      //error func
+		}
+	}).done(function(){
+      $('#fb-list').each(function () {
+            $(this).html($(this).html().replace(/((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g, '<a href="$1" target="_blank">チェック</a> '));
+      });
+	});
 </script>
 
 <style>
@@ -447,6 +533,17 @@
 </head>
 
 <body style="background-color: #9e9e9e;">
+<script>
+  // fb SDKのロード
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/ja_JP/all.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+<div id="fb-root"></div>
 	<div id="wrapper">
 		<div id="mosaic_header">
 			<div class="mosaic_header_tab">
@@ -611,6 +708,19 @@
 			</div>
 			<div style="clear:both"></div>
 
+			<div id="flow6" class="mt20">
+				<p class="mosaic_flow_title">
+					<span class=mosaic_title_sqare></span>画像重ね設定
+				</p>
+ 				<div class="fl" >
+					<span class="slidlabel mt20">◆重ね処理</span>
+				</div>
+				<div class="fl left_in2">
+			 		<input type="number" min ="0" max="100" id="wrap_fix" step=10 value="10" class="mt15">%
+ 				</div>
+			</div>
+			<div style="clear:both"></div>
+
 			<div id="flow7">
 				<div class="btn_space">
 					<form id="my_form" enctype="multipart/form-data">
@@ -621,11 +731,12 @@
 				</div>
 				<div id="mosaic_create_window"></div>
 				<div class="mt10 fr" style="height: 80px;">
-					<img src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="alert('FaceBookで共有する');">
+					<img id="login" src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="fbAsyncInit();">
 					<img src="resources/images/twitter.png" alt="twitter" style="width: 30px" onclick="alert('Twitterで共有する');">
 					<img src="resources/images/instagram.png" alt="instagram" style="width: 30px" onclick="alert('Instagramで共有する');">
 				</div>
 				<div class="clr"></div>
+				<ul id="fb-list"></ul>
 			</div>
 		</div>
 	</div>

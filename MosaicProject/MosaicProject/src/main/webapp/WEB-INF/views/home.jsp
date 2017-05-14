@@ -1,4 +1,3 @@
-<!doctype html>
 <%--
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -8,7 +7,7 @@
 
 <html>
 <head>
-<meta charset="utf-8">
+
 <link href="<c:url value="/resources/css/common.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/jquery-ui.css" />" rel="stylesheet">
 <link rel="shortcut icon" href="resources/images/mosaic_logo.png">
@@ -16,6 +15,36 @@
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>"></script>
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
+<script src='http://connect.facebook.net/ja_JP/all.js'></script>
+
+<script>
+  FB.init({appId: 221647884979390, status: true, cookie: true});  // 取得したappIdをセットする
+
+  function postToFeed() {
+	  if (FileName !==''){
+	    // apiをコール
+	    var obj = {
+	      method: 'feed',
+	      link: 'http://52.193.130.108/MosaicGenerator/',
+	      picture: urlpath,
+	      name: 'MosaicAppli',
+	      caption: '',
+	      description: ''
+	    };
+
+	    // コールバック
+	    function callback(response) {
+	      console.log(response['post_id']);
+	      alert("投稿されました！");
+	    }
+
+	    FB.ui(obj, callback);
+	} else {
+		alert("モザイクフォトを作成してください。");
+	}
+  }
+
+</script>
 
 <script>
 
@@ -27,6 +56,8 @@
 	var origin_path;
 	var max_width = 800;
 	var pix_list = new Array();
+	var FileName ='';
+	var urlpath ='http://52.193.130.108/MosaicGenerator/file1?1494390221927';
 
 	$(function() {
 		//デフォルト設定
@@ -237,7 +268,7 @@
 				$("#save_btn").html('<a href="file1" download="mosaic.png"><span class="btndiv_1" id="save_btn">保存</span></a>')
 				var top = ($("#flow7").position().top);
 				$('html,body').animate({scrollTop: top}, 300, 'swing');
-
+				FileName = urlpath + timestamp;
 			},
 			error : function(XMLHttpRequest, status, errorThrown) {
 				alert("失敗しました。");
@@ -390,7 +421,6 @@
 	 $("#loading").remove();
 	}
 
-
 </script>
 
 <style>
@@ -449,6 +479,17 @@
 </head>
 
 <body style="background-color: #9e9e9e;">
+<script>
+  // fb SDKのロード
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/ja_JP/all.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+<div id="fb-root"></div>
 	<div id="wrapper">
 		<div id="mosaic_header">
 			<div class="mosaic_header_tab">
@@ -623,14 +664,12 @@
 				</div>
 				<div id="mosaic_create_window"></div>
 				<div class="mt10 fr" style="height: 80px;">
-					<img src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="alert('FaceBookで共有する');">
+					<img id="btn" src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="postToFeed();">
 					<img src="resources/images/twitter.png" alt="twitter" style="width: 30px" onclick="alert('Twitterで共有する');">
 					<img src="resources/images/instagram.png" alt="instagram" style="width: 30px" onclick="alert('Instagramで共有する');">
 				</div>
-				<div class="clr"></div>
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>

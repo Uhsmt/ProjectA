@@ -263,8 +263,7 @@ public class HomeController {
 	@RequestMapping("/file1")
 	@ResponseBody
     public void file1(HttpServletResponse res) throws IOException {
-    	String IMAGE_FILE = "C:/mosaic/mosaic.png";
-    	IMAGE_FILE =  this.image_file_name ;
+    	String IMAGE_FILE = this.image_file_name ;
 
     	System.out.println("file1:" + IMAGE_FILE);
     	File file = new File(IMAGE_FILE);

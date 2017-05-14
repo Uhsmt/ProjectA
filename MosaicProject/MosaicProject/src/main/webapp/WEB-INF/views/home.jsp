@@ -166,6 +166,8 @@
 		}).done(function(data, status, jqXHR) {
 			if(data == "false"){
 				alert("画像選択に失敗しました。" + data);
+			} else if(data == "sizeover"){
+				alert("画像サイズが大きすぎます。");
 			}else{
 				alert("オリジナル画像を使用します。");
 				origin_path = data;

@@ -15,17 +15,28 @@
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>"></script>
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
-<script src='http://connect.facebook.net/ja_JP/all.js'></script>
+<script src='http://connect.facebook.net/ja_JP/sdk.js'></script>
+
 
 <script>
-  FB.init({appId: 221647884979390, status: true, cookie: true});  // 取得したappIdをセットする
+ try{
+	FB.init({appId: 221647884979390, status: true, cookie: true,version: 'v2.5'});  // 取得したappIdをセットする
+
+} catch(e){
+	console.log("★★Error★★");
+	console.log(e);
+}
 
   function postToFeed() {
 	  if (FileName !==''){
-	    // apiをコール
+		//170514 hashi サーバURLを設定するまで直書きしておきます
+		//var link = location.host + create_folder;
+		var link = 'http://52.193.130.108/MosaicGenerator/';
+
+		// apiをコール
 	    var obj = {
 	      method: 'feed',
-	      link: 'http://52.193.130.108/MosaicGenerator/',
+	      link:link,
 	      picture: urlpath,
 	      name: 'MosaicAppli',
 	      caption: '',
@@ -57,7 +68,8 @@
 	var max_width = 800;
 	var pix_list = new Array();
 	var FileName ='';
-	var urlpath ='http://52.193.130.108/MosaicGenerator/file1?1494390221927';
+	var urlpath ='';	//chg hashi 170515 urlpathはクリエイト時にパスを渡します
+	var create_folder = '<c:out value="${created_folder}"/>';
 
 	$(function() {
 		//デフォルト設定
@@ -254,6 +266,7 @@
 		$.ajax({
 			type : "POST",
 			url : "up",
+			scriptCharset: 'UTF-8',
 			data : data,
 			contentType : false,
 			mimeType : 'application',
@@ -261,14 +274,18 @@
 			cache : false,
 			success : function(data, status, xhr) {
 				image_exist = true;
-				mozaicpath = data;
 				alert("モザイクフォトが完成しました。");
 				var timestamp = new Date().getTime();
 				$("#mosaic_create_window").html("<img src='file1?"+timestamp+"''>");
 				$("#save_btn").html('<a href="file1" download="mosaic.png"><span class="btndiv_1" id="save_btn">保存</span></a>')
 				var top = ($("#flow7").position().top);
 				$('html,body').animate({scrollTop: top}, 300, 'swing');
-				FileName = urlpath + timestamp;
+
+				//170514 hashi urlpath をセット(★本番サーバ名が決定するまで字書きしています)
+				//urlpath = location.host + create_folder +"/"+data;
+				urlpath = 'http://52.193.130.108/MosaicGenerator/' + create_folder +"/"+data;
+				console.log(urlpath);
+				FileName = data;
 			},
 			error : function(XMLHttpRequest, status, errorThrown) {
 				alert("失敗しました。");

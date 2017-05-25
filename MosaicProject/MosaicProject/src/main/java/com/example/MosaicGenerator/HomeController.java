@@ -34,13 +34,13 @@ import constants.Properties;
 @Controller
 public class HomeController {
 	private String image_file_name ;
-
+	//▼add m.hagihara 2017/05/25	privacypolicy画面表示用に追加
 	@RequestMapping(value = "/privacypolicy")
 	public String pp(Model model) {
 		model.addAttribute("created_folder",Properties.created_folder);
 		return "privacypolicy";
 	}
-
+	//▲add m.hagihara 2017/05/25	privacypolicy画面表示用に追加
 	//main_get
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) {

@@ -16,13 +16,10 @@
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
 <script src='http://connect.facebook.net/ja_JP/sdk.js'></script>
-
 <script>
 //FB画像投稿処理
-
  try{
-	FB.init({appId: 221647884979390, status: true, cookie: true,version: 'v2.8'});  // 取得したappIdをセットする
-//	FB.init({appId: 1652879498134053, status: true, cookie: true,version: 'v2.7'});  // 取得したappIdをセットする
+	FB.init({appId: 221647884979390, status: true, cookie: true,version: 'v2.5'});  // 取得したappIdをセットする
 
 } catch(e){
 	console.log("★★Error★★");
@@ -38,7 +35,7 @@
 		// apiをコール
 	    var obj = {
 	      method: 'feed',
-	      link:urlpath,	//写真自体をポストしたほうが良い？
+	      link:link,
 	      picture: urlpath,
 	      name: 'MosaicAppli',
 	      caption: '',
@@ -285,7 +282,9 @@
 
 				//170514 hashi urlpath をセット(★本番サーバ名が決定するまで字書きしています)
 				//urlpath = location.host + create_folder +"/"+data;
+
 				urlpath = 'http://52.193.130.108/MosaicGenerator' + create_folder + data;
+
 				console.log(urlpath);
 				FileName = data;
 			},

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.MosaicGenerator.Model.ColorModel;
@@ -34,9 +35,16 @@ import constants.Properties;
 public class HomeController {
 	private String image_file_name ;
 
+	@RequestMapping(value = "/privacypolicy")
+	public String pp(Model model) {
+		model.addAttribute("created_folder",Properties.created_folder);
+		return "privacypolicy";
+	}
+
 	//main_get
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) {
+		model.addAttribute("created_folder",Properties.created_folder);
 		return "home";
 	}
 
@@ -58,6 +66,8 @@ public class HomeController {
 			// 保存
 			imagefile.transferTo(file);
 
+		}catch(MultipartException ex){
+			res = "sizeover";
 		}catch(Exception e){
 			res = "false";
 			e.printStackTrace();
@@ -67,7 +77,7 @@ public class HomeController {
 	}
 
 	// モザイク作成：非同期→作成後のファイルは/fileに作成
-	@RequestMapping(value = "/up", method = RequestMethod.POST)
+	@RequestMapping(value = "/up", method = RequestMethod.POST,produces="text/plain;charset=UTF-8")
 	@ResponseBody
 	public String upload(HttpServletResponse res,@RequestBody String body)throws IOException {
 		String[] data = body.split("/");
@@ -252,12 +262,13 @@ public class HomeController {
 		//return_path = created_path_wrap;
 		//はぎー追加
 */
-		file1(res) ;
+		//1705014 ここでファイル１を呼ぶ必要はない
+		//file1(res) ;
 		return return_path;
 	}
 
 	//作成後ファイル
-	@RequestMapping("/file1")
+	@RequestMapping(value="/file1")
 	@ResponseBody
     public void file1(HttpServletResponse res) throws IOException {
     	String IMAGE_FILE = this.image_file_name ;
@@ -266,9 +277,8 @@ public class HomeController {
     	File file = new File(IMAGE_FILE);
         res.setContentLength((int) file.length());
         res.setContentType(MediaType.ALL_VALUE);
-
         FileCopyUtils.copy(new FileInputStream(file), res.getOutputStream());
-    }
+	}
 
 
 
@@ -417,8 +427,11 @@ public class HomeController {
 			Date date = new Date();
 			String str_date = sdf.format(date);
 			created_path = Properties.mozaicfolder + "mosaic"+str_date+".png";
-			ImageIO.write(img, "png", new File(created_path));
+			File created_file = new File(created_path);
+			ImageIO.write(img, "png", created_file);
 			this.image_file_name = created_path;
+			//chg hashi returnpathをファイル名に
+			return created_file.getName();
 		} catch (Exception e) {
 			e.printStackTrace();
 			readImage = null;

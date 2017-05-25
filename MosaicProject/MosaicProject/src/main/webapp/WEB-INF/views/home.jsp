@@ -15,17 +15,30 @@
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>"></script>
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
-<script src='http://connect.facebook.net/ja_JP/all.js'></script>
+<script src='http://connect.facebook.net/ja_JP/sdk.js'></script>
 
 <script>
-  FB.init({appId: 221647884979390, status: true, cookie: true});  // 取得したappIdをセットする
+//FB画像投稿処理
+
+ try{
+	FB.init({appId: 221647884979390, status: true, cookie: true,version: 'v2.8'});  // 取得したappIdをセットする
+//	FB.init({appId: 1652879498134053, status: true, cookie: true,version: 'v2.7'});  // 取得したappIdをセットする
+
+} catch(e){
+	console.log("★★Error★★");
+	console.log(e);
+}
 
   function postToFeed() {
 	  if (FileName !==''){
-	    // apiをコール
+		//170514 hashi サーバURLを設定するまで直書きしておきます
+		//var link = location.host + create_folder;
+		var link = 'http://52.193.130.108/MosaicGenerator/';
+
+		// apiをコール
 	    var obj = {
 	      method: 'feed',
-	      link: 'http://52.193.130.108/MosaicGenerator/',
+	      link:urlpath,	//写真自体をポストしたほうが良い？
 	      picture: urlpath,
 	      name: 'MosaicAppli',
 	      caption: '',
@@ -57,7 +70,8 @@
 	var max_width = 800;
 	var pix_list = new Array();
 	var FileName ='';
-	var urlpath ='http://52.193.130.108/MosaicGenerator/file1?1494390221927';
+	var urlpath ='';	//chg hashi 170515 urlpathはクリエイト時にパスを渡します
+	var create_folder = '<c:out value="${created_folder}"/>';
 
 	$(function() {
 		//デフォルト設定
@@ -197,6 +211,8 @@
 		}).done(function(data, status, jqXHR) {
 			if(data == "false"){
 				alert("画像選択に失敗しました。" + data);
+			} else if(data == "sizeover"){
+				alert("画像サイズが大きすぎます。");
 			}else{
 				alert("オリジナル画像を使用します。");
 				origin_path = data;
@@ -252,6 +268,7 @@
 		$.ajax({
 			type : "POST",
 			url : "up",
+			scriptCharset: 'UTF-8',
 			data : data,
 			contentType : false,
 			mimeType : 'application',
@@ -259,14 +276,18 @@
 			cache : false,
 			success : function(data, status, xhr) {
 				image_exist = true;
-				mozaicpath = data;
 				alert("モザイクフォトが完成しました。");
 				var timestamp = new Date().getTime();
 				$("#mosaic_create_window").html("<img src='file1?"+timestamp+"''>");
 				$("#save_btn").html('<a href="file1" download="mosaic.png"><span class="btndiv_1" id="save_btn">保存</span></a>')
 				var top = ($("#flow7").position().top);
 				$('html,body').animate({scrollTop: top}, 300, 'swing');
-				FileName = urlpath + timestamp;
+
+				//170514 hashi urlpath をセット(★本番サーバ名が決定するまで字書きしています)
+				//urlpath = location.host + create_folder +"/"+data;
+				urlpath = 'http://52.193.130.108/MosaicGenerator' + create_folder + data;
+				console.log(urlpath);
+				FileName = data;
 			},
 			error : function(XMLHttpRequest, status, errorThrown) {
 				alert("失敗しました。");
@@ -477,15 +498,77 @@
 </head>
 
 <body style="background-color: #9e9e9e;">
+<div id="gallery"></div>
 <script>
   // fb SDKのロード
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/ja_JP/all.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
+	var token = '';
+	var uid = '';
+
+    function getPhotos() {
+	    FB.init({
+	      appId      : '221647884979390',
+	      xfbml      : true,
+	      version    : 'v2.8'
+	    });
+	  	FB.getLoginStatus(function(response) {
+
+		    if (response.status === 'connected') {
+		      alert('ログインも連携認証もされている');
+		      login();
+		      //postfeed();
+		    } else if (response.status === 'not_authorized') {
+		      alert('ログインしているが連携されていない');
+		      login();
+		    } else {
+		      alert('ログインしていない');
+		      login();
+		    }
+		  });
+	};
+
+	function login(){
+	  FB.login(function(response) {
+	    token = response.authResponse.accessToken;
+	    uid = response.authResponse.userID;
+	    //alert(token)
+	    //aalert(uid)
+	    if (response.authResponse) {
+	    	FB.api('/me', 'get', { access_token: token },
+	    		function(response) {
+	    			alert(token);
+	    			alert('確認1');
+	    			//alert('ログインも連携認証もされた');
+		    	    //getPhotos();  画像取得処理追加予定 hagihara
+		    	    /* 数字の部分はアルバムのIDに変更 */
+		    	    var url = "https://graph.facebook.com/" + uid + "/photos?access_token=" + token
+		    	    $(function(){
+		    	         $.getJSON(url,function(json){
+		    	                var items = [ ];
+		    	                $.each(json.data,function(i,fb){
+		    	            items.push(' <li><a href="' + fb.link + '" target="_blank"><img src="' + fb.picture + '" title="' + fb.name + '" width="100" height="100" /></li></a> ');
+		    	                        });
+		    	        $('<ul/>', {html: items.join('')}).appendTo('#gallery');
+		    	        });
+		    	    });
+		      	}
+	    	);
+	    	//FB.api(
+	    	//	    "/121153781793861?albums?access_token=" + token,
+	 	  	//	    function (response) {
+	    	//	      if (response && !response.error) {
+	    	//	        /* handle the result */
+	    	//	      }
+	    	//	    }
+	    	//	);
+	    } else {
+	   		FB.api('/'+uid, 'get', { access_token: token }, function(response) {
+	   			alert(response);
+	   			alert('ログインもしくは連携認証がキャンセルされた');
+	    });
+	    }
+	  });
+	}
+
 </script>
 <div id="fb-root"></div>
 	<div id="wrapper">
@@ -496,6 +579,11 @@
 		</div>
 		<div id="mosaic_wrapper">
 			<div id="flow1">
+
+			<form action="/MosaicGenerator/privacypolicy" method="post">
+				<input type="image" src="resources/images/pp.png" alt="送信する">
+ 			</form>
+
 				<p class="mosaic_flow_title">
 					<span class=mosaic_title_sqare></span>完成イメージを選択
 				</p>
@@ -665,6 +753,7 @@
 					<img id="btn" src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="postToFeed();">
 					<img src="resources/images/twitter.png" alt="twitter" style="width: 30px" onclick="alert('Twitterで共有する');">
 					<img src="resources/images/instagram.png" alt="instagram" style="width: 30px" onclick="alert('Instagramで共有する');">
+					<img id="btn" src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="getPhotos();">
 				</div>
 			</div>
 		</div>

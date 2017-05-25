@@ -15,68 +15,15 @@
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>"></script>
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
-<script src='http://connect.facebook.net/ja_JP/sdk.js'></script>
-
-
-<style>
-#baseimage8_img{
-	width:150px;
-}
-.slidlabel{
-	display:block;
-	min-height:30px;
-	width:130px;
-	float:left;
-}
-.left_in{
-    border-right: 10px double #b9b9b9;
-    padding: 2px 10px;
-    margin-right: 10px;
- }
-.left_in2{
-    padding: 2px 10px;
-    margin-right: 10px;
- }
-
-
- .btn_space{
-   	height: 80px;
-    margin-left: 200px;
-    margin-top: 30px;
-}
-
-#loading{
-    width:50px;
-	height:50px;
-    border:1px dashed #999;
-    padding:15px;
-    position: fixed;
-    top:50%;
-    left:50%;
-    background-color:#FFF;
-    filter: alpha(opacity=85);
-    -moz-opacity:0.85;
-    opacity:0.95;
-    background-image:url("resources/images/load.gif");
-
-}
-.baseimage8_tdspan{
-    width: 200px;
-    height: 35px;
-    display: block;
-    font-size: 14px;
-    }
-
-
-</style>
 
 <title>MosaicAppli</title>
 </head>
 
 <body>
-<div id="wrapper">
+<div id="pp_wrapper">
     <!-- InstanceBeginEditable name="EditRegion1" -->
 	<div id="content">
+		<h2><img src="../common/images/titile_privacy01.png" width="650" height="42" alt="個人情報保護に関する基本方針" /></h2>
     	<p class="mt15">
         	ペネトレイト・オブ・リミット株式会社（以下、弊社といいます）は、個人情報保護法を遵守し、お客様の氏名、住所、電話番号、Eメールアドレス等お客様を特定することのできる情報（以下、個人情報といいます）を適正に取扱うことが企業の重要な社会的責務であるとの認識に立ち、以下のとおり個人情報保護に関する基本方針を定めております。
         </p>
@@ -119,7 +66,7 @@
 
     <div class="clr"></div>
     <!-- InstanceEndEditable -->
-</div><!-- end #wrapper -->
+</div><!-- end #pp_wrapper -->
 
     <div id="copyright">
         <p class="fr">Copyright &copy; 2011-

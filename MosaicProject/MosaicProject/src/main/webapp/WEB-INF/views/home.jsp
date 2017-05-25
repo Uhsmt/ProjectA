@@ -497,7 +497,6 @@
 </head>
 
 <body style="background-color: #9e9e9e;">
-<div id="gallery"></div>
 <script>
   // fb SDKのロード
 	var token = '';

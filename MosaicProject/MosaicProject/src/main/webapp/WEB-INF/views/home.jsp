@@ -580,7 +580,9 @@
 			<div id="flow1">
 
 			<form action="/MosaicGenerator/privacypolicy" method="post">
-				<input type="image" src="resources/images/pp.png" alt="送信する">
+				<div class="pp">
+					<input type="image" src="resources/images/pp.png" alt="" id="pp">
+				</div>
  			</form>
 
 				<p class="mosaic_flow_title">

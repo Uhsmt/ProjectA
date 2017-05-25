@@ -73,63 +73,64 @@
 <title>MosaicAppli</title>
 </head>
 
-<body style="background-color: #9e9e9e;">
-<div class="sp_part_top">
-	<div class="sp_definition_list0">
-	<table border="0" cellspacing="0" cellpadding="0" class="formTable800" style="margin-top: 10px;">
-	<tr>
-	<td colspan="2" align="center">当社はご利用者の氏名・メールアドレス等の個人情報の保護に関し、以下の取組みを実施しております。<br><br></td>
-	</tr>
-	<tr>
-	<td class="ppTdLeft">1.</td>
-	<td class="ppTdRight">当社は、個人情報に関する法令およびその他の規範を遵守し、ご利用者の大切な個人情報の保護に万全を尽くします。</td>
-	</tr>
-	<tr>
-	<td class="ppTdLeft">2.</td>
-	<td class="ppTdRight">当社は、ご利用者の個人情報については、下記の目的の範囲内で適正に取り扱いさせていただきます。</td>
-	</tr>
-	<tr>
-	<td class="ppTdLeft">&nbsp;</td>
-	<td class="ppTdRight"><table border="0" cellspacing="0" cellpadding="0">
-	<tr>
-	<td class="ppTxtDot">・</td>
-	<td>当サイト提供のコンテンツ、ツールを利用するために必要な手続きなどを行うこと</td>
-	</tr>
-	<tr>
-	<td class="ppTxtDot">・</td>
-	<td>電子メール、電話、郵送等各種媒体により、当社のサービスに関する販売推奨、アンケート調査および景品等の送付を行うこと</td>
-	</tr>
-	<tr>
-	<td class="ppTxtDot">・</td>
-	<td>当社のサービスの改善又は新たなサービスの開発を行うこと</td>
-	</tr>
-	<tr>
-	<td class="ppTxtDot">・</td>
-	<td>お問合せ、ご相談にお答えすること。なお、上記利用目的の他、サービス・アンケート等により個別に利用目的を定める場合があります。</td>
-	</tr>
-	</table></td>
-	</tr>
-	<tr>
-	<td class="ppTdLeft">3.</td>
-	<td class="ppTdRight">当社は、ご利用者の個人情報を適正に取扱うため、社内規程および社内管理体制の整備、従業員の教育、並びに、個人情報への不正アクセスや個人情報の紛失、破壊、改ざんおよび漏洩等防止に関する適切な措置を行い、また、その見直しを継続して図ることにより、個人情報の保護に努めてまいります。</td>
-	</tr>
-	<tr>
-	<td class="ppTdLeft">4.</td>
-	<td class="ppTdRight">当社は、ご利用者の個人情報については、上記利用目的を達成するため、業務委託先又は提携先に預託する場合があります。その場合は、個人情報の保護が十分に図られている企業を選定し、個人情報保護の契約を締結する等必要かつ適切な処置を実施いたします。なお、法令等に基づき裁判所・警察機関などの公的機関から開示の要請があった場合については、当該公的機関に提供することがあります。</td>
-	</tr>
-	<tr>
-	<td class="ppTdLeft">5.</td>
-	<td class="ppTdRight">当社では、ご利用者の個人情報の保護を図るために、また、法令その他の規範の変更に対応するために、プライバシーポリシーを改定する事があります。改定があった場合は当サイトにてお知らせいたします。</td>
-	</tr>
-	<tr>
-	<td class="ppTdLeft">6.</td>
-	<td class="ppTdRight">個人情報保護に関してご不明な点などございましたら、<a href="contact.html">お問い合わせページ</a>からご連絡いただくか、下記の当社窓口までご連絡いただければ、合理的な範囲で速やかに対応いたします。</td>
-	</tr>
-	</table>
-	<br>
-	</div><!-- sp_definition_list0 -->
-	<img src="images/privacypolicy/privacypolicy_tel.jpg" class="sp_image" alt="個人情報保護に関するお問い合わせ：株式会社ラヴィコ（個人情報お問い合わせ窓口）03-3861-3932" /><br>
-</div><!-- sp_part_top -->
-v>
+<body>
+<div id="wrapper">
+    <!-- InstanceBeginEditable name="EditRegion1" -->
+	<div id="content">
+    	<p class="mt15">
+        	ペネトレイト・オブ・リミット株式会社（以下、弊社といいます）は、個人情報保護法を遵守し、お客様の氏名、住所、電話番号、Eメールアドレス等お客様を特定することのできる情報（以下、個人情報といいます）を適正に取扱うことが企業の重要な社会的責務であるとの認識に立ち、以下のとおり個人情報保護に関する基本方針を定めております。
+        </p>
+
+        <p class="pr_title">1. 個人情報の取得</p>
+
+        <p>
+        	弊社は、個人情報を取得する際には、その利用目的を明示し、必要な範囲で、適法かつ公正な手段によって取得いたします。
+        </p>
+
+        <p class="pr_title">2. 個人情報の取り扱い<br/>
+        1) 利用目的内での利用</p>
+
+        <p>
+        	弊社は、上記1.の定めに従って取得した個人情報を、お客様ご本人の同意なくして利用目的の範囲を超えて利用することはございません。弊社が取得した個人情報は、以下の目的に利用いたします。<br/>
+            1.	弊社で取り扱っている商品・サービスなどに関する営業上のご案内を行うこと。<br/>
+            2.	商品の企画・開発あるいはお客様満足度向上策などの検討のため、お客様にアンケート調査を実施すること。<br/>
+            3.	お客様からのお問合せへの対応、迅速なサービスなどの実施のために必要な業務遂行。<br/>
+            4.	その他個人情報取得時に明示した利用目的。
+        </p>
+
+        <p class="pr_title">2) 個人情報の第三者への提供</p>
+
+        <p>
+        	弊社は、上記1.の定めに従って取得した個人情報を、お客様ご本人の同意を得ずに第三者に提供することはございません。ただし、利用目的を達成するための必要な範囲で、個人情報を業務委託先に提供することがあります。この場合においても、弊社は業務委託先に対し、提供した個人情報の適正な取り扱いを求めるとともに適切な管理をいたします。
+        </p>
+
+        <p class="pr_title">3) 個人情報の適切な管理</p>
+
+        <p>
+        	弊社は、個人情報への不正アクセス、個人情報の紛失・破壊・改ざん・漏洩等を防止するために適切な安全対策を講じます。また、個人情報を取り扱う従業員等に対して、個人情報保護のための研修・教育を定期的に実施する等の啓発活動に努めてまいります。
+        </p>
+
+        <p class="pr_title">3.法令遵守と改善</p>
+        <p>
+        	弊社は、個人情報保護に関する法令・通達ならびにその他の諸規程を遵守し、個人情報が適正に取り扱われますよう、継続的な改善に取り組んでまいります。また、改善した内容を、この基本方針に随時反映してまいります。
+        </p>
+
+	</div><!-- end #content -->
+
+    <div class="clr"></div>
+    <!-- InstanceEndEditable -->
+</div><!-- end #wrapper -->
+
+    <div id="copyright">
+        <p class="fr">Copyright &copy; 2011-
+        <script type="text/javascript">
+        document.write(new Date().getFullYear());
+        </script>
+        Penetrate of Limits Co.,Ltd.  All Rights Reserved.</p>
+        <div class="clr"></div>
+    </div>
+</div><!-- end #footer -->
+
 </body>
+
 </html>

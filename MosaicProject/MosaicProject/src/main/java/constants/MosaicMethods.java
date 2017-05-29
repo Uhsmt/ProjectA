@@ -318,22 +318,22 @@ public class MosaicMethods {
 			    writeImage.setRGB(x, y, rgb);
 			    }
 		}
-		String created_path_test = "";
+		String created_path_wrap = "";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHss");
 		Date date = new Date();
 		String str_date = sdf.format(date);
-		created_path_test = Properties.mozaicfolder + "mosaic_test"+str_date+".png";
+		created_path_wrap = Properties.mozaicfolder + "mozaic_wrap"+str_date+".png";
 		//透過した画像保存
-		ImageIO.write(writeImage, "png", new File(created_path_test));
+		ImageIO.write(writeImage, "png", new File(created_path_wrap));
 
 	      /* 画像の重ね合わせ */
-		BufferedImage img = ImageIO.read(new File(return_path)); // モザイク画像
-		BufferedImage img2 = ImageIO.read(new File(created_path_test)); // 透過画像
+		BufferedImage img = ImageIO.read(new File(Properties.mozaicfolder + return_path)); // モザイク画像
+		BufferedImage img2 = ImageIO.read(new File(created_path_wrap)); // 透過画像
 		Graphics2D gr = img.createGraphics();
 		gr.drawImage(img2,0,0,null);
 		gr.dispose();
 		// モザイク画像を上書き
-		ImageIO.write(img, "png", new File(return_path));
+		ImageIO.write(img, "png", new File(Properties.mozaicfolder + return_path));
 		} catch(Exception e){
 			readImage = null;
 			return false;

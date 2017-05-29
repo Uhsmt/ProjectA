@@ -23,9 +23,9 @@
 <div id="pp_wrapper">
     <!-- InstanceBeginEditable name="EditRegion1" -->
 	<div id="content">
-		<h2><img src="../common/images/titile_privacy01.png" width="650" height="42" alt="個人情報保護に関する基本方針" /></h2>
+		<!-- <h2><img src="../common/images/titile_privacy01.png" width="650" height="42" alt="個人情報保護に関する基本方針" /></h2> -->
     	<p class="mt15">
-        	ペネトレイト・オブ・リミット株式会社（以下、弊社といいます）は、個人情報保護法を遵守し、お客様の氏名、住所、電話番号、Eメールアドレス等お客様を特定することのできる情報（以下、個人情報といいます）を適正に取扱うことが企業の重要な社会的責務であるとの認識に立ち、以下のとおり個人情報保護に関する基本方針を定めております。
+        	個人情報保護法を遵守し、お客様の氏名、住所、電話番号、Eメールアドレス等お客様を特定することのできる情報（以下、個人情報といいます）を適正に取扱うことが企業の重要な社会的責務であるとの認識に立ち、以下のとおり個人情報保護に関する基本方針を定めております。
         </p>
 
         <p class="pr_title">1. 個人情報の取得</p>
@@ -67,17 +67,19 @@
     <div class="clr"></div>
     <!-- InstanceEndEditable -->
 </div><!-- end #pp_wrapper -->
-
+<div class="button_wrapper">
+   <button class="bkbtn" onclick="history.back()">前のページへ戻る</button>
+</div>
+<!--
     <div id="copyright">
-        <p class="fr">Copyright &copy; 2011-
+        <p class="fc">Copyright &copy; 2011-
         <script type="text/javascript">
         document.write(new Date().getFullYear());
         </script>
         Penetrate of Limits Co.,Ltd.  All Rights Reserved.</p>
         <div class="clr"></div>
     </div>
-</div><!-- end #footer -->
-
+ -->
 </body>
 
 </html>

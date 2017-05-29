@@ -19,7 +19,7 @@
     font-family: inherit;
 }
 .mosaic_header_tab{
-     width: 310px;
+    width: 310px;
     height: 46px;
     display: block;
     background: #585858;
@@ -74,9 +74,9 @@
 }
 
 #mosaic_create_window{
-    border: 3px dotted #b9b9b9;
     width: 800px;
     height: 510px;
+
 }
 
 #pp{
@@ -119,11 +119,13 @@
     margin: 9px 5px 5px 0px;
 }
 .pp{
-	border: 3px solid #000000;
-    width: 200px;
-    height:100px;
-	margin-left: auto;
+	margin-right: auto;
 }
+
+a {
+text-decoration: none;
+}
+
 
 /*common*/
 
@@ -308,8 +310,15 @@
     padding: 50px;
 }
 
+#fc{ float:right; }
 
-
-
-
-
+.button_wrapper{
+	text-align:center;
+}
+.bkbtn{
+	background-color: #333;
+	border: 5px solid #333;
+	color: #fff;
+	line-height: 50px;
+	width: 150px;
+}

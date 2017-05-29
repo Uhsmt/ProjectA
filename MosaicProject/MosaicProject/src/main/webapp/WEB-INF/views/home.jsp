@@ -38,8 +38,8 @@
 	      link:link,
 	      picture: urlpath,
 	      name: 'MosaicAppli',
-	      caption: '',
-	      description: ''
+	      caption: '#MosaicAppli',
+	      description: 'aaaaaa'
 	    };
 
 	    // コールバック
@@ -577,13 +577,6 @@
 		</div>
 		<div id="mosaic_wrapper">
 			<div id="flow1">
-
-			<form action="/MosaicGenerator/privacypolicy" method="post">
-				<div class="pp">
-					<input type="image" src="resources/images/pp.png" alt="" id="pp">
-				</div>
- 			</form>
-
 				<p class="mosaic_flow_title">
 					<span class=mosaic_title_sqare></span>完成イメージを選択
 				</p>
@@ -631,7 +624,8 @@
 						<td class="td_check">
 							<input type="radio" name="imageselect_radio" data-name="base-07.png" id="baseimage7"></td>
 						<td><label class="mosaic_baseimages" for="baseimage7">
-								<img src="resources/images/base-07.png" id="baseimage7_img">
+									<!-- <img src="resources/images/base-07.png" > -->
+									<img src="resources/images/facebooklogo.png" alt="facebook" onclick="getPhotos();">
 						</label></td>
 
 						<td class="td_check">
@@ -749,11 +743,15 @@
 					<span id="save_btn"></span>
 				</div>
 				<div id="mosaic_create_window"></div>
+			<form action="/MosaicGenerator/privacypolicy" method="post">
+				<div class="pp">
+					<a id="pp" href="/MosaicGenerator/privacypolicy" > privacypolicy </a>
+				</div>
+ 			</form>
 				<div class="mt10 fr" style="height: 80px;">
 					<img id="btn" src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="postToFeed();">
 					<img src="resources/images/twitter.png" alt="twitter" style="width: 30px" onclick="alert('Twitterで共有する');">
 					<img src="resources/images/instagram.png" alt="instagram" style="width: 30px" onclick="alert('Instagramで共有する');">
-					<img id="btn" src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="getPhotos();">
 				</div>
 			</div>
 		</div>

@@ -266,7 +266,6 @@ public class HomeController {
 		//file1(res) ;
 		return return_path;
 	}
-
 	//作成後ファイル
 	@RequestMapping(value="/file1")
 	@ResponseBody

@@ -15,6 +15,8 @@
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>"></script>
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64.js"></script>
 <script src='http://connect.facebook.net/ja_JP/sdk.js'></script>
 <script>
 //FB画像投稿処理
@@ -25,7 +27,7 @@
 	console.log("★★Error★★");
 	console.log(e);
 }
-
+  //Feed Dialog
   function postToFeed() {
 	  if (FileName !==''){
 		//170514 hashi サーバURLを設定するまで直書きしておきます
@@ -38,14 +40,12 @@
 	      link:link,
 	      picture: urlpath,
 	      name: 'MosaicAppli',
-	      caption: '#MosaicAppli',
-	      description: 'aaaaaa'
+	      description: '',
 	    };
 
 	    // コールバック
 	    function callback(response) {
 	      console.log(response['post_id']);
-	      alert("投稿されました！");
 	    }
 
 	    FB.ui(obj, callback);
@@ -441,6 +441,68 @@
 
 </script>
 
+<script>
+//twitter
+//function twitText() {
+//	var s, url;
+//	s = "投稿するテキスト";
+//	url = document.location.href;
+
+//	if (s != "") {
+//		if (s.length > 140) {
+//			//文字数制限
+//			alert("テキストが140字を超えています");
+//		} else {
+//			//投稿画面を開く
+//			url = "http://twitter.com/share?url=" + escape(url) + "&text=" + s;
+//			window.open(url,"_blank","width=600,height=300");
+//		}
+//	}
+//}
+function twitText() {
+
+	//import HmacSHA1 from 'crypto-js/hmac-sha1';
+	//import Base64 from 'crypto-js/enc-base64';
+
+	const access_token_secret = "iQFg0BnN9sWBCJkQnMn9DeWu9vozJijPqnXwM8lxKRIdO"; //まだないので空でOK
+	const consumer_secret = "1QxDlHAhuzaCfbcCHHDXNSmvbvQfY0D21BO5UtvegRLIO9xSPT";
+	const signature_key = encodeURIComponent(consumer_secret) + "&" + encodeURIComponent(access_token_secret);
+	//ここまでがキーの作成
+
+	const request_method = "GET";
+	const request_url = "https://api.twitter.com/oauth/request_token"
+	const params = {
+	 "name": "sample",
+	 "text": "sample",
+	}
+
+	const params_to_query = (params) => {
+	  return Object.keys(params).sort().map(key => {
+	          return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+	        }).join(",");
+	}
+	const signature_data = encodeURIComponent(request_method) + "&" + encodeURIComponent(request_url) + "&" + params_to_query;
+	//ここまでがデータの作成
+
+	const hash = CryptoJS.HmacSHA1(signature_data, signature_key);
+	const signature = window.btoa(hash);
+
+	//var data = document.querySelector('#mosaic_create_window').files;
+	var data = urlpath;
+	var fd = new FormData();
+
+	// mediaパラメータが必須なので、第一引数は必ずmedia
+	fd.append("media", data[0]);
+
+	var xhr = new XMLHttpRequest({mozSystem: true});
+	xhr.open("POST", "https://upload.twitter.com/1.1/media/upload.json", true);
+	xhr.setRequestHeader('Authorization', signature);
+	xhr.send(fd);
+	xhr.addEventListener('load', function() {
+	  console.log(JSON.parse(xhr.responseText));
+	});
+}
+</script>
 <style>
 #baseimage8_img{
 	width:150px;
@@ -497,6 +559,7 @@
 </head>
 
 <body style="background-color: #9e9e9e;">
+<ul id="fb-list"></ul>
 <script>
   // fb SDKのロード
 	var token = '';
@@ -529,25 +592,47 @@
 	    token = response.authResponse.accessToken;
 	    uid = response.authResponse.userID;
 	    //alert(token)
-	    //aalert(uid)
+	    //alert(uid)
 	    if (response.authResponse) {
-	    	FB.api('/me', 'get', { access_token: token },
-	    		function(response) {
-	    			alert(token);
-	    			alert('確認1');
+//	    	FB.api('/me', 'get', { access_token: token },
+//	    		function(response) {
 	    			//alert('ログインも連携認証もされた');
 		    	    //getPhotos();  画像取得処理追加予定 hagihara
 		    	    /* 数字の部分はアルバムのIDに変更 */
-		    	    var url = "https://graph.facebook.com/" + uid + "/photos?access_token=" + token
-		    	    $(function(){
-		    	         $.getJSON(url,function(json){
-		    	                var items = [ ];
-		    	                $.each(json.data,function(i,fb){
-		    	            items.push(' <li><a href="' + fb.link + '" target="_blank"><img src="' + fb.picture + '" title="' + fb.name + '" width="100" height="100" /></li></a> ');
-		    	                        });
-		    	        $('<ul/>', {html: items.join('')}).appendTo('#gallery');
-		    	        });
-		    	    });
+//		    	    var url = "https://graph.facebook.com/" + uid + "/photos?access_token=" + token
+//		    	    $(function(){
+//		    	         $.getJSON(url,function(json){
+//		    	                var items = [ ];
+//		    	                $.each(json.data,function(i,fb){
+//		    	            items.push(' <li><a href="' + fb.link + '" target="_blank"><img src="' + fb.picture + '" title="' + fb.name + '" width="100" height="100" /></li></a> ');
+//		    	                        });
+//		    	        $('<ul/>', {html: items.join('')}).appendTo('#gallery');
+//		    	        });
+//		    	    });
+
+		    	    $.ajax({
+		type: 'GET',
+		url: 'https://graph.facebook.com/v2.3/' + uid + '/feed?access_token=' + token,
+		dataType: 'json',
+		success: function(json) {
+			var COUNT = 5;
+			for (var i=0; i<=(COUNT-1); i++) {
+				var obj = json.data[i];
+        var pic = obj.picture;
+        var time = obj.created_time.replace(/[A-Z].*0/g,'').replace(/-/g,'/');
+				$('#fb-list').append('<li><time>'+time+'</time><span><img src="'+pic+'"></span>'+name+'</li>');
+
+			}
+		},
+		error: function() {
+      //error func
+		}
+	}).done(function(){
+      $('#fb-list').each(function () {
+            $(this).html($(this).html().replace(/((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g, '<a href="$1" target="_blank">チェック</a> '));
+      });
+
+
 		      	}
 	    	);
 	    	//FB.api(
@@ -750,7 +835,7 @@
  			</form>
 				<div class="mt10 fr" style="height: 80px;">
 					<img id="btn" src="resources/images/facebooklogo.png" alt="facebook"	style="width: 30px" onclick="postToFeed();">
-					<img src="resources/images/twitter.png" alt="twitter" style="width: 30px" onclick="alert('Twitterで共有する');">
+					<img src="resources/images/twitter.png" alt="twitter" style="width: 30px" onclick="twitText()">
 					<img src="resources/images/instagram.png" alt="instagram" style="width: 30px" onclick="alert('Instagramで共有する');">
 				</div>
 			</div>

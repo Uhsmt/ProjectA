@@ -74,6 +74,7 @@
 }
 
 #mosaic_create_window{
+    border: 3px dotted #b9b9b9;
     width: 800px;
     height: 510px;
 

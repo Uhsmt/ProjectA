@@ -16,8 +16,8 @@
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
 
+<!-- 初期動作 -->
 <script>
-
 	var image_exist = false;
 	var def_width;
 	var def_height;
@@ -120,11 +120,11 @@
 			});
 		})
 	});
+</script>
 
-
-	//モザイクイメージ作成関数
+<!-- モザイクイメージ作成関数 -->
+<script>
 	function generate() {
-
 		var origin = new Boolean(false);
 		var mozaicpath;
 		// ラジオのid取得
@@ -231,8 +231,10 @@
 		});
 		*/
 	}
+</script>
 
-	//保存用関数
+<!-- 保存用関数 -->
+<script>
 	function save() {
 		if (!image_exist) {
 			alert("イメージが作成されていません。");
@@ -258,7 +260,9 @@
 			});
 		}
 	}
+</script>
 
+<script>
 	//リセット用関数
 	function clear_image() {
 		$(function() {
@@ -266,7 +270,6 @@
 
 		});
 	}
-
 	/*
 	function create_mosaic() {
 		//createされるたびにlistは初期化
@@ -355,7 +358,6 @@
 </script>
 
 <style>
-
 </style>
 
 <title>MosaicAppli</title>

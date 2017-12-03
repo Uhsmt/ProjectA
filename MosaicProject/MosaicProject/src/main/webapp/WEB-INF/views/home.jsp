@@ -16,6 +16,7 @@
 <script src="<c:url value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"/>"></script>
 <script src="<c:url value="/resources/js/common.js" />"></script>
 <script src='http://connect.facebook.net/ja_JP/sdk.js'></script>
+
 <script>
 //FB画像投稿処理
  try{
@@ -56,8 +57,8 @@
 
 </script>
 
+<!-- 初期動作 -->
 <script>
-
 	var image_exist = false;
 	var def_width;
 	var def_height;
@@ -171,7 +172,9 @@
 		});
 
 	});
+</script>
 
+<script>
 	function origin_image_send(frm){
 		$(function(){
 			// フォームで選択された全ファイルを取得
@@ -220,9 +223,10 @@
 			alert("失敗しました。" + status);
 		});
 	}
+</script>
 
-
-	//モザイクイメージ作成関数
+<!-- モザイクイメージ作成関数 -->
+<script>
 	function generate() {
 		$("#mosaic_create_window").empty();
 		var selected_id = $("input[name='imageselect_radio']:checked").attr("data-name");
@@ -296,8 +300,10 @@
             }
 		});
 	}
+</script>
 
-	//保存用関数
+<!-- 保存用関数 -->
+<script>
 	function save() {
 		if (!image_exist) {
 			alert("イメージが作成されていません。");
@@ -306,10 +312,12 @@
 			window.location.href =  "file1.png";
 		}
 	}
+</script>
 
+<!-- 保存用関数 -->
+<script>
 	function size_set(){
 		//console.log("size_set");
-
 		$(function(){
 			var thisid = $("input[name='imageselect_radio']:checked").attr("id");
 			var imgwidth = $("#" + thisid + "_img").width();
@@ -323,7 +331,9 @@
 			mosaic_rate_set();
 		});
 	}
+</script>
 
+<script>
 	function mosaic_rate_set(){
 		//console.log("mosaic_rate_set");
 		var pix = $("#mosaic_sqare_input").val();
@@ -352,10 +362,10 @@
 
 		$("#height_pixcel_input").attr({"max" :imgheight/2,"min" : 2});
 		$("#width_pixcel_input").attr({"max" :imgwidth/2,"min" : 2});
-
-
 	}
+</script>
 
+<script>
 	//pixcelcheck
 	function pixcel_check(pix){
 		var width = $("#width_input").val();
@@ -385,16 +395,20 @@
 		}
 		return pix;
 	}
+</script>
 
-	//リセット用関数
+<!-- リセット用関数 -->
+<script>
 	function clear_image() {
 		location.reload();
 		$(function() {
 			$("body").scrollTop(0);
 		});
 	}
+</script>
 
-	//最小公倍数を求める関数
+<!-- 最小公倍数を求める関数 -->
+<script>
 	function getMinPix(A,B){
 		var Alist = divisor(A);
 		var Blist = divisor(B);
@@ -425,8 +439,10 @@
 		    return results;
 		}
 	}
+</script>
 
-	// Loadingイメージ表示関数
+<!-- Loadingイメージ表示関数 -->
+<script>
 	function dispLoading(){
 	    // ローディング画像が表示されていない場合のみ表示
 	    if($("#loading").size() == 0){
@@ -438,7 +454,6 @@
 	function removeLoading(){
 	 $("#loading").remove();
 	}
-
 </script>
 
 <style>
